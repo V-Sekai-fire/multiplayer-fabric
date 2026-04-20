@@ -65,3 +65,6 @@
 [submodule "multiplayer-fabric-webtransport"]
 	path = multiplayer-fabric-webtransport
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport.git
+[submodule "multiplayer-fabric-hosting"]
+	path = multiplayer-fabric-hosting
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-hosting.git
