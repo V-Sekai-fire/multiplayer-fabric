@@ -23,6 +23,8 @@ An open-source social VR platform built on a custom Godot Engine fork. This root
 | `multiplayer-fabric-desync` | Go | Content-addressed chunk synchronization (`casync`-compatible) |
 | `homebrew-multiplayer-fabric` | Ruby | macOS Homebrew tap |
 | `scoop-multiplayer-fabric` | JSON | Windows Scoop bucket |
+| `multiplayer-fabric-storage` | Docker / Shell | VersityGW S3-compatible object storage config and bucket setup |
+| `aria-storage` | Elixir | Content-addressed casync chunking library (buzhash + zstd + SHA-512/256) |
 
 ## Quick start
 
