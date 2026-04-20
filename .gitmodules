@@ -62,3 +62,6 @@
 [submodule "cockroach"]
 	path = cockroach
 	url = https://github.com/v-sekai/cockroach.git
+[submodule "multiplayer-fabric-webtransport"]
+	path = multiplayer-fabric-webtransport
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport.git
