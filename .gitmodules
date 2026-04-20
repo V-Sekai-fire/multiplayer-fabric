@@ -46,3 +46,9 @@
 [submodule "multiplayer-fabric-storage"]
 	path = multiplayer-fabric-storage
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-storage.git
+[submodule "multiplayer-fabric-predictive-bvh"]
+	path = multiplayer-fabric-predictive-bvh
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh.git
+[submodule "multiplayer-fabric-skills"]
+	path = multiplayer-fabric-skills
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-skills.git

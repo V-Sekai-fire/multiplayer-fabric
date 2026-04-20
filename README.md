@@ -25,6 +25,8 @@ An open-source social VR platform built on a custom Godot Engine fork. This root
 | `scoop-multiplayer-fabric` | JSON | Windows Scoop bucket |
 | `multiplayer-fabric-storage` | Docker / Shell | VersityGW S3-compatible object storage config and bucket setup |
 | `aria-storage` | Elixir | Content-addressed casync chunking library (buzhash + zstd + SHA-512/256) |
+| `multiplayer-fabric-predictive-bvh` | Lean 4 / Rust | Formally verified Predictive BVH spatial oracle; generates `predictive_bvh.h` and `predictive_bvh.rs` |
+| `multiplayer-fabric-skills` | Elixir | Reusable skill behaviours for zone_console and zone backend agents |
 
 ## Quick start
 
