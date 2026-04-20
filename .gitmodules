@@ -1,0 +1,42 @@
+[submodule "homebrew-multiplayer-fabric"]
+	path = homebrew-multiplayer-fabric
+	url = https://github.com/V-Sekai-fire/homebrew-multiplayer-fabric.git
+[submodule "multiplayer-fabric-artifacts-mmog"]
+	path = multiplayer-fabric-artifacts-mmog
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-artifacts-mmog.git
+[submodule "multiplayer-fabric-deploy"]
+	path = multiplayer-fabric-deploy
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-deploy.git
+[submodule "multiplayer-fabric-desync"]
+	path = multiplayer-fabric-desync
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-desync.git
+[submodule "multiplayer-fabric-godot"]
+	path = multiplayer-fabric-godot
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
+[submodule "multiplayer-fabric-humanoid-project"]
+	path = multiplayer-fabric-humanoid-project
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project.git
+[submodule "multiplayer-fabric-interaction-system"]
+	path = multiplayer-fabric-interaction-system
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system.git
+[submodule "multiplayer-fabric-merge"]
+	path = multiplayer-fabric-merge
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-merge.git
+[submodule "multiplayer-fabric-rx"]
+	path = multiplayer-fabric-rx
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-rx.git
+[submodule "multiplayer-fabric-sandbox"]
+	path = multiplayer-fabric-sandbox
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-sandbox.git
+[submodule "multiplayer-fabric-taskweft"]
+	path = multiplayer-fabric-taskweft
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft.git
+[submodule "multiplayer-fabric-zone-backend"]
+	path = multiplayer-fabric-zone-backend
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend.git
+[submodule "multiplayer-fabric-zone-console"]
+	path = multiplayer-fabric-zone-console
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console.git
+[submodule "scoop-multiplayer-fabric"]
+	path = scoop-multiplayer-fabric
+	url = https://github.com/V-Sekai-fire/scoop-multiplayer-fabric.git
