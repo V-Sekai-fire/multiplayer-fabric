@@ -34,6 +34,7 @@
 [submodule "multiplayer-fabric-zone-backend"]
 	path = multiplayer-fabric-zone-backend
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend.git
+	branch = main
 [submodule "multiplayer-fabric-zone-console"]
 	path = multiplayer-fabric-zone-console
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console.git
