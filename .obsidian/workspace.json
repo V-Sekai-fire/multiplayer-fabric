@@ -185,6 +185,10 @@
   },
   "active": "6a8b697d23ecdd3b",
   "lastOpenFiles": [
+    "multiplayer-fabric-skills/skills/cloudflare-networking/SKILL.md",
+    "multiplayer-fabric-skills/skills/cloudflare-networking",
+    "multiplayer-fabric-skills/skills/local-sim-stack/SKILL.md",
+    "multiplayer-fabric-skills/skills/local-sim-stack",
     "multiplayer-fabric-zone-backend/lib/uro/pow/dets_cache.ex",
     "multiplayer-fabric-hosting/Caddyfile",
     "multiplayer-fabric-hosting/docker-compose.yml",
@@ -196,10 +200,7 @@
     "multiplayer-fabric-webtransport/test/wtransport_test.exs",
     "multiplayer-fabric-webtransport/test/test_helper.exs",
     "multiplayer-fabric-webtransport/test",
-    "multiplayer-fabric-webtransport/native/wtransport_native/src/lib.rs",
-    "multiplayer-fabric-webtransport/native/wtransport_native/src",
     "multiplayer-fabric-webtransport/native/wtransport_native/README.md",
-    "multiplayer-fabric-webtransport/native/wtransport_native/Cargo.toml",
     "multiplayer-fabric-webtransport/examples/wtransport_echo/README.md",
     "multiplayer-fabric-webtransport/README.md",
     "cockroach/scripts/release-notes/README.md",
@@ -229,7 +230,6 @@
     "cockroach/pkg/acceptance/testdata/node/README.md",
     "cockroach/pkg/acceptance/testdata/java/README.md",
     "cockroach/pkg/sql/tests/README.md",
-    "cockroach/pkg/sql/parser/README.md",
-    "cockroach/pkg/sql/opt/citations.md"
+    "cockroach/pkg/sql/parser/README.md"
   ]
 }
