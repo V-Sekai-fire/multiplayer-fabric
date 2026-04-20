@@ -40,3 +40,6 @@
 [submodule "scoop-multiplayer-fabric"]
 	path = scoop-multiplayer-fabric
 	url = https://github.com/V-Sekai-fire/scoop-multiplayer-fabric.git
+[submodule "aria-storage"]
+	path = aria-storage
+	url = https://github.com/V-Sekai-fire/aria-storage.git
