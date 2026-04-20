@@ -5,6 +5,14 @@ Guidance for AI coding agents working in this repository.
 The submodule list is the canonical source of truth in [README.md](README.md).
 Contribution rules, language guides, documentation style, and writing anti-tropes are in [CONTRIBUTING.md](CONTRIBUTING.md). This file covers only what is specific to agent workflows.
 
+## Commit message style
+
+MUST NOT use Conventional Commits (`feat:`, `fix:`, `chore:`, etc.). Write commit messages in sentence case: one short imperative sentence, no type prefix, no scope, no colon. Examples:
+
+- `Add CMD_INSTANCE_ASSET to peer command enum`
+- `Fix mix.exs missing closing bracket in deps list`
+- `Update zone-console submodule pointer`
+
 ## Working with submodules
 
 ```sh
