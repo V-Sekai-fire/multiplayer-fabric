@@ -4,14 +4,14 @@
 
 Two backends — `web` uses the browser JS API; all others use picoquic + picotls + mbedtls.
 
-| Platform | Backend | Role |
-|---|---|---|
-| `web` | JS (`quic_web_glue.js`) | Primary — browser client |
-| `linux` | picoquic native | Steam Deck + server |
-| `macos` | picoquic native | Dev + shipping (arm64) |
-| `windows` | — | Skip |
-| `android` | — | Skip |
-| `ios` | — | Skip — App Store blocks raw QUIC sockets |
+| Platform  | Backend                 | Role                                     |
+| --------- | ----------------------- | ---------------------------------------- |
+| `web`     | JS (`quic_web_glue.js`) | Primary — browser client                 |
+| `linux`   | picoquic native         | Steam Deck + server                      |
+| `macos`   | picoquic native         | Dev + shipping (arm64)                   |
+| `windows` | —                       | Skip                                     |
+| `android` | —                       | Skip                                     |
+| `ios`     | —                       | Skip — App Store blocks raw QUIC sockets |
 
 ## Zone Console Asset Streaming
 
@@ -21,15 +21,15 @@ player — closing the loop from authoring tool to live world.
 
 ### Cycles (Pareto order — highest value/effort ratio first)
 
-| Cycle | What you get | Effort | Status |
-|---|---|---|---|
-| 1 | `UroClient.upload_asset/3` — casync chunk → S3 → uro manifest | Medium | [ ] |
-| 2 | `upload <path>` command — user can store a scene | Low | [ ] |
-| 3 | `CMD_INSTANCE_ASSET` wire encoding — protocol ready | Low | [ ] |
-| 4 | `instance <id> <x> <y> <z>` command — user can trigger instancing | Low | [ ] |
-| 5 | `UroClient.get_manifest/2` — chunk manifest fetch | Low | [ ] |
-| 6 | Godot zone handler — zone actually instances the scene | High | [ ] |
-| 7 | Round-trip integration smoke test | High | [ ] |
+| Cycle | What you get                                                      | Effort | Status |
+| ----- | ----------------------------------------------------------------- | ------ | ------ |
+| 1     | `UroClient.upload_asset/3` — casync chunk → S3 → uro manifest     | Medium | [ ]    |
+| 2     | `upload <path>` command — user can store a scene                  | Low    | [ ]    |
+| 3     | `CMD_INSTANCE_ASSET` wire encoding — protocol ready               | Low    | [ ]    |
+| 4     | `instance <id> <x> <y> <z>` command — user can trigger instancing | Low    | [ ]    |
+| 5     | `UroClient.get_manifest/2` — chunk manifest fetch                 | Low    | [ ]    |
+| 6     | Godot zone handler — zone actually instances the scene            | High   | [ ]    |
+| 7     | Round-trip integration smoke test                                 | High   | [ ]    |
 
 ### Cycle 1 — UroClient.upload_asset/3
 
@@ -37,11 +37,13 @@ Add `{:aria_storage, github: "V-Sekai-fire/aria-storage"}` to
 `modules/multiplayer_fabric_mmog/tools/zone_console/mix.exs`.
 
 Implement `UroClient.upload_asset/3`:
+
 1. `AriaStorage.process_file(path, backend: :s3)` → `{:ok, %{chunks, store_url}}`
 2. POST `/storage` with `{name, chunks, store_url}` + Bearer token
 3. Return `{:ok, id}`
 
 Configure S3 in `config/runtime.exs`:
+
 ```elixir
 config :aria_storage,
   storage_backend: :s3,
@@ -59,6 +61,7 @@ Add `"upload"` clause to `handle_line/2` in `app.ex`; call
 ### Cycle 3 — CMD_INSTANCE_ASSET wire protocol
 
 Add to `fabric_mmog_peer.h`:
+
 ```cpp
 CMD_INSTANCE_ASSET = 4,
 // payload[1] = shared_file_uuid_hi (u32)
@@ -83,6 +86,7 @@ return `{:ok, %{store_url: _, chunks: [_|_]}}`.
 ### Cycle 6 — Godot zone: handle CMD_INSTANCE_ASSET
 
 In `FabricMMOGPeer::_process_peer_packet`:
+
 - Add `case CMD_INSTANCE_ASSET:` dispatch
 - Extract `asset_id` (two u32 slots → UUID) and `pos` (three f32 slots)
 - Call `FabricMMOGAsset::fetch_asset` with the uro manifest URL
