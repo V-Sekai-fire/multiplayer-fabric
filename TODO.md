@@ -2,16 +2,12 @@
 
 ## WebTransport Platform Support (modules/http3)
 
-Two backends — `web` uses the browser JS API; all others use picoquic + picotls + mbedtls.
+Two backends — `web` uses the browser JS API; `linux` uses picoquic + picotls + mbedtls.
 
-| Platform  | Backend                 | Role                                     |
-| --------- | ----------------------- | ---------------------------------------- |
-| `web`     | JS (`quic_web_glue.js`) | Primary — browser client                 |
-| `linux`   | picoquic native         | Steam Deck + server                      |
-| `macos`   | picoquic native         | Dev + shipping (arm64)                   |
-| `windows` | —                       | Skip                                     |
-| `android` | —                       | Skip                                     |
-| `ios`     | —                       | Skip — App Store blocks raw QUIC sockets |
+| Platform | Backend                 | Role                     |
+| -------- | ----------------------- | ------------------------ |
+| `web`    | JS (`quic_web_glue.js`) | Primary — browser client + WebXR |
+| `linux`  | picoquic native         | Server                   |
 
 ## Zone Console Asset Streaming
 
