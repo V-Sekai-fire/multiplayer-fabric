@@ -60,6 +60,58 @@ elixir update_godot_v_sekai.exs
 
 `gitassembly` is the plain-text merge config read by `thirdparty/git-assembler` (Python 3). Do not pass it to `elixir`.
 
+## Verbalized Sampling (VS)
+
+When facing an open-ended decision — which branch to create, how to resolve a
+conflict, what name to give a new submodule — use Verbalized Sampling
+(Zhang et al. 2025, `references.bib`) instead of committing to the first
+option that comes to mind.
+
+**Technique:** Generate N candidate responses and assign an explicit probability
+to each. Pick the highest-probability response, or surface the distribution to
+the user when probabilities are close.
+
+This counters typicality bias: the first response an LLM produces is the most
+familiar, not necessarily the best.
+
+**Example — choosing a name for a new skills submodule:**
+
+| Response | P |
+|---|---|
+| `multiplayer-fabric-skills` | 0.35 |
+| `multiplayer-fabric-playbook` | 0.20 |
+| `multiplayer-fabric-sop` | 0.15 |
+| `multiplayer-fabric-runbook` | 0.12 |
+| `multiplayer-fabric-recipes` | 0.08 |
+| `multiplayer-fabric-tactics` | 0.05 |
+| `multiplayer-fabric-procedures` | 0.03 |
+| `multiplayer-fabric-ops` | 0.02 |
+
+Chosen: `multiplayer-fabric-skills` (0.35) — highest probability, domain-neutral,
+consistent with the Elixir convention of naming behaviour units "skills".
+
+**How we use it in this project:**
+
+Before taking any irreversible action (creating a GitHub repo, naming a branch,
+choosing a conflict resolution strategy), produce a VS table in your reasoning.
+Do not show the table to the user unless probabilities are close (top two within
+0.10 of each other) — in that case, surface the top two and ask. Otherwise
+silently pick the highest and proceed.
+
+The table must have exactly 8 rows. Probabilities must sum to 1.00.
+Assign probability 0.00 to options that violate project rules (e.g. any name
+starting with `archived/`, any option that requires force-pushing a protected
+branch).
+
+**When to use VS:**
+
+- Naming a new repo, branch, or file
+- Resolving an assembly conflict with multiple valid fixes
+- Deciding which SOP to write next
+- Choosing between two architectural approaches
+
+**Reference:** `references.bib` → `zhang2025verbalized`
+
 ## Per-submodule test commands
 
 | Submodule | Test command | Framework |
