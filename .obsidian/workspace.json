@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "multiplayer-fabric-rx/docker/README.md",
+                "file": "multiplayer-fabric-fly/README.md",
                 "mode": "source",
                 "source": false
               },
@@ -186,6 +186,7 @@
   "active": "6a8b697d23ecdd3b",
   "lastOpenFiles": [
     "TODO.md",
+    "multiplayer-fabric-rx/docker/README.md",
     "README.md",
     "multiplayer-fabric-webtransport/lib/wtransport/client.ex",
     "multiplayer-fabric-webtransport/test/wtransport_test.exs",
@@ -229,7 +230,6 @@
     "cockroach/pkg/sql/tests/README.md",
     "cockroach/pkg/sql/parser/README.md",
     "cockroach/pkg/sql/opt/citations.md",
-    "cockroach/pkg/sql/opt/README.md",
-    "cockroach/pkg/cmd/roachtest/README.md"
+    "cockroach/pkg/sql/opt/README.md"
   ]
 }
