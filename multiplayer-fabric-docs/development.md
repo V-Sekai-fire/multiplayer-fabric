@@ -133,7 +133,7 @@ bash baker/regenerate-baker-project.sh [../multiplayer-fabric-rx] [../multiplaye
 | 3 | `UroClient.get_manifest/2` | done |
 | 4 | `CMD_INSTANCE_ASSET` wire encoding (100-byte packet) | done |
 | 5 | `instance` console command — sends packet to zone server | done |
-| 6 | Asset baker — Docker `editor=yes`, `res://baker/run.gd` vsk i/o script | in progress |
+| 6 | Asset baker — Docker `editor=yes`, casync `.caidx` output, vsk i/o script | done |
 | 7 | Zone orchestrator — Docker `editor=no` zone server lifecycle | planned |
 | 8 | Godot zone handler — authority zone runs instance pipeline | planned |
 | 9 | Round-trip smoke test — upload → instance → entity list on prod | planned |

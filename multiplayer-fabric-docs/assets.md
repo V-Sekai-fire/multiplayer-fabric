@@ -1,16 +1,17 @@
 # Asset pipeline
 
-User-created Godot scenes (avatar `.tscn` or map `.tscn`) are uploaded to
+User-created Godot scenes (avatar or map, `.tscn` or `.scn`) are uploaded to
 `zone-backend`, validated and cleaned by `vsk_importer_exporter` running
 inside a headless Godot editor, chunked into casync format, then streamed to
 zone servers as a delta-sync chunk set.
 
 ## What gets uploaded
 
-The uploaded asset is a **Godot packed scene** (`.tscn`) — either an avatar
-scene or a map scene. The scene must conform to the allowlists enforced by
-`VSKAvatarValidator` or `VSKMapValidator`. Raw mesh files (GLB, OBJ) may be
-included as resources inside the scene but are not uploaded standalone.
+The uploaded asset is a **Godot packed scene** (`.tscn` text format or `.scn`
+binary format) — either an avatar scene or a map scene. The scene must conform
+to the allowlists enforced by `VSKAvatarValidator` or `VSKMapValidator`. Raw
+mesh files (GLB, OBJ) may be referenced as resources inside the scene but are
+not uploaded standalone.
 
 ## Baker overview
 
@@ -31,8 +32,8 @@ The baker must:
 4. Chunk the output `.scn` with AriaStorage and upload to VersityGW.
 
 The project template is `multiplayer-fabric-baker` (15 MB, stripped of XR/UI
-addons). The baker GDScript entrypoint (`res://baker/run.gd`) does not yet
-exist and is the next piece of work required to complete Cycle 6.
+addons). The baker GDScript entrypoint is `res://baker/run.gd` inside
+`multiplayer-fabric-baker`.
 
 ## casync format
 
@@ -51,11 +52,11 @@ missing when an asset updates.
 ## Full pipeline
 
 ```
-1. zone_console uploads packed scene (.tscn)
+1. zone_console uploads packed scene (.tscn or .scn)
    POST /storage  multipart  →  zone-backend:4000
 
 2. zone-backend stores raw file in VersityGW
-   PUT versitygw:7070/uro-uploads/<id>.tscn
+   PUT versitygw:7070/uro-uploads/<id>.tscn  (or .scn)
    writes shared_files record  (store_url set, baked_url null)
 
 3. zone-backend spawns baker container (one-shot, exits when done)
@@ -69,13 +70,13 @@ missing when an asset updates.
 
 4. baker container
    a. fetch manifest → get store_url
-   b. download .tscn from VersityGW → workspace/scenes/<id>.tscn
+   b. download scene from VersityGW → workspace/scenes/<id>.tscn (or .scn)
    c. copy /vsk-project → workspace/ (full project with addons)
    d. godot --editor --headless --quit --path workspace/
         (Godot resource import: textures, meshes)
    e. godot --headless --path workspace/ \
-        --script res://baker/run.gd -- <content_type> scenes/<id>.tscn
-        (VSKImporter validates scene; VSKExporter saves cleaned .scn)
+        --script res://baker/run.gd -- <content_type> scenes/<id>.tscn out/<id>.scn
+        (VSKImporter validates scene; VSKExporter saves cleaned binary .scn)
    f. AriaStorage.create_chunks(out/<id>.scn, compression: :zstd)
         → uploads .cacnk files to versitygw:7070/uro-uploads/chunks/
    g. AriaStorage.create_index_from_chunks(chunks, format: :caidx)
@@ -97,50 +98,6 @@ missing when an asset updates.
      GET versitygw:7070/uro-uploads/chunks/<ab>/<cd>/<hash>.cacnk
    reassemble .scn from chunks
 ```
-
-## Baker GDScript entrypoint (not yet written)
-
-`res://baker/run.gd` (inside `multiplayer-fabric-baker`) needs to:
-
-```gdscript
-# Called as: godot --headless --path <workspace> --script res://baker/run.gd
-#            -- avatar|map scenes/<id>.tscn out/<id>.scn
-extends SceneTree
-
-func _init():
-    var args = OS.get_cmdline_user_args()  # ["avatar", "scenes/<id>.tscn", "out/<id>.scn"]
-    var content_type = args[0]             # "avatar" or "map"
-    var scene_path   = "res://" + args[1]
-    var out_path     = "res://" + args[2]
-
-    var packed: PackedScene = ResourceLoader.load(scene_path)
-
-    var result: Dictionary
-    match content_type:
-        "avatar":
-            var importer = VSKImporter.new()
-            result = importer.clean_packed_scene_for_avatar(packed)
-        "map":
-            result = VSKImporter.clean_packed_scene_for_map(packed)
-
-    if result["packed_scene"] == null:
-        push_error("Validation failed: " + str(result["result"]))
-        quit(1)
-        return
-
-    var exporter = VSKExporter.new()
-    var root = Node.new()
-    var node = result["packed_scene"].instantiate()
-    root.add_child(node)
-    match content_type:
-        "avatar": exporter.export_avatar(root, node, out_path)
-        "map":    exporter.export_map(root, node, out_path)
-
-    quit(0)
-```
-
-This script lives in `multiplayer-fabric-baker` so it is present at
-`res://baker/run.gd` when the project is copied into the baker workspace.
 
 ## Baker image
 
