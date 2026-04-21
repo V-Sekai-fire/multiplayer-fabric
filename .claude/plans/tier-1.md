@@ -33,8 +33,8 @@ Addresses strategy move #5 (target the solo Godot developer first).
 
 `multiplayer-fabric-hosting` already has a compose file and zone-backend is live at hub-700a.chibifire.com. The differentiator is the full spatial layer — zone handoff, content delivery, and permissions that SpacetimeDB does not provide — but a product nobody can run yet is not a product. Ship the wedge first; the differentiated layer lands in v0.2.
 
-- [ ] Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
-- [ ] Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
+- [x] Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
+- [x] Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
 - [ ] Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
 
 ---
