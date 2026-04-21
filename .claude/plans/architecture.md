@@ -1,6 +1,6 @@
 # Multiplayer Fabric — Pareto Next Steps
 
-Strategic context lives in `multiplayer-fabric-strategy.md`. This file owns the architecture constraints and task index. Task checklists live in the tier files.
+Strategic context lives in `strategy.md`. This file owns the architecture constraints and task index. Task checklists live in the tier files.
 
 ---
 
@@ -26,11 +26,11 @@ Taskweft's C++ is compiled into a BEAM NIF `.so`. Godot's C++ is compiled into t
 
 | #   | Task                                      | Tier | Effort | Impact | Built | File                  |
 | --- | ----------------------------------------- | ---- | ------ | ------ | ----- | --------------------- |
-| 1   | Publish one-command docker compose        | 1    | low    | high   | ~75%  | `tier-1-do-now.md`    |
-| 2   | Wire taskweft ReBAC into zone-backend     | 1    | low    | high   | ~80%  | `tier-1-do-now.md`    |
-| 3   | Zone crossing → desync delta-sync trigger | 2    | medium | high   | ~50%  | `tier-2-do-next.md`   |
-| 4   | Godot client-side WebTransport module     | 2    | high   | high   | ~40%  | `tier-2-do-next.md`   |
-| 5   | SQLite-per-zone with WAL replay           | 3    | high   | medium | ~25%  | `tier-3-real-value.md`|
+| 1   | Publish one-command docker compose        | 1    | low    | high   | ~75%  | `tier-1.md`    |
+| 2   | Wire taskweft ReBAC into zone-backend     | 1    | low    | high   | ~80%  | `tier-1.md`    |
+| 3   | Zone crossing → desync delta-sync trigger | 2    | medium | high   | ~50%  | `tier-2.md`   |
+| 4   | Godot client-side WebTransport module     | 2    | high   | high   | ~40%  | `tier-2.md`   |
+| 5   | SQLite-per-zone with WAL replay           | 3    | high   | medium | ~25%  | `tier-3.md`|
 
 Items 1 and 2 are assembly of existing pieces. Items 3 and 4 each need one new connector on top of a complete library. Item 5 requires a new architectural layer.
 

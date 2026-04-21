@@ -2,8 +2,8 @@
 
 Most of the hard work exists. Each item needs one new connector on top of a complete library.
 
-Strategic context: `multiplayer-fabric-strategy.md`
-Architecture constraints: `pareto-next-steps.md`
+Strategic context: `strategy.md`
+Architecture constraints: `architecture.md`
 
 ---
 

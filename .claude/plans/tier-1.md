@@ -2,8 +2,8 @@
 
 Most value already built. Both items are assembly of existing pieces — the code is written, it just is not wired together or framed as a product.
 
-Strategic context: `multiplayer-fabric-strategy.md`
-Architecture constraints: `pareto-next-steps.md`
+Strategic context: `strategy.md`
+Architecture constraints: `architecture.md`
 
 ---
 

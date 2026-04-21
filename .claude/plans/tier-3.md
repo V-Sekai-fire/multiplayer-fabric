@@ -2,8 +2,8 @@
 
 Requires a new architectural layer. Build after tiers 1 and 2 are done.
 
-Strategic context: `multiplayer-fabric-strategy.md`
-Architecture constraints: `pareto-next-steps.md`
+Strategic context: `strategy.md`
+Architecture constraints: `architecture.md`
 
 ---
 
