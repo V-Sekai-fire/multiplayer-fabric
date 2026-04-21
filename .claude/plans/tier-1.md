@@ -47,7 +47,7 @@ Addresses strategy move #3 (ReBAC as zone permission model). Lands as v0.2 immed
 
 `multiplayer-fabric-taskweft` has a fully-proven C++ NIF ReBAC graph (93 PropCheck properties passing). `zone-backend` has `user_relations/` and `user_content/` — the permission call sites exist but still use flat boolean guards (`can_upload_maps`, `is_admin`).
 
-- [ ] Add `{:taskweft, github: "V-Sekai-fire/multiplayer-fabric-taskweft"}` to zone-backend's `mix.exs`
-- [ ] Define a relation schema: user `OWNS` content, user `IS_MEMBER_OF` zone
-- [ ] Replace `RequireMapUploadPermission`, `RequireAvatarUploadPermission`, `RequirePropUploadPermission` with `Taskweft.ReBAC.check/3` calls
-- [ ] Godot module stays unchanged — it checks capabilities in the JWT, not the graph
+- [x] Add `{:taskweft, github: "V-Sekai-fire/multiplayer-fabric-taskweft"}` to zone-backend's `mix.exs`
+- [x] Define a relation schema: user `OWNS` content, user `IS_MEMBER_OF` zone
+- [x] Replace `RequireMapUploadPermission`, `RequireAvatarUploadPermission`, `RequirePropUploadPermission` with `Taskweft.ReBAC.check/3` calls
+- [x] Godot module stays unchanged — it checks capabilities in the JWT, not the graph
