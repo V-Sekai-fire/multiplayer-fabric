@@ -1,8 +1,38 @@
 # Asset pipeline
 
-Raw assets (GLB, .tscn) are uploaded to `zone-backend`, baked asynchronously
-into casync format by a one-shot Docker container, then streamed to zone servers
-as a delta-sync chunk set.
+User-created Godot scenes (avatar `.tscn` or map `.tscn`) are uploaded to
+`zone-backend`, validated and cleaned by `vsk_importer_exporter` running
+inside a headless Godot editor, chunked into casync format, then streamed to
+zone servers as a delta-sync chunk set.
+
+## What gets uploaded
+
+The uploaded asset is a **Godot packed scene** (`.tscn`) — either an avatar
+scene or a map scene. The scene must conform to the allowlists enforced by
+`VSKAvatarValidator` or `VSKMapValidator`. Raw mesh files (GLB, OBJ) may be
+included as resources inside the scene but are not uploaded standalone.
+
+## Baker overview
+
+The baker must:
+
+1. Place the uploaded `.tscn` into a full Godot project that has
+   `vsk_importer_exporter` and its dependencies loaded.
+2. Run `godot --editor --headless --quit --path <workspace>` to trigger
+   Godot's standard resource import (textures, meshes, etc.).
+3. Run a baker GDScript via `godot --headless --path <workspace> --script
+   res://baker/run.gd -- <content_type> <scene_path>` which calls:
+   - `VSKImporter.clean_packed_scene_for_map(packed_scene)` or
+     `VSKImporter.clean_packed_scene_for_avatar(packed_scene)`  
+     → validates node types, scripts, animation tracks, node paths
+   - `VSKExporter.export_map(root, node, out_path)` or
+     `VSKExporter.export_avatar(root, node, out_path)`  
+     → duplicates, cleans, and saves a `.scn` (binary packed scene)
+4. Chunk the output `.scn` with AriaStorage and upload to VersityGW.
+
+The project template is `multiplayer-fabric-baker` (15 MB, stripped of XR/UI
+addons). The baker GDScript entrypoint (`res://baker/run.gd`) does not yet
+exist and is the next piece of work required to complete Cycle 6.
 
 ## casync format
 
@@ -21,47 +51,96 @@ missing when an asset updates.
 ## Full pipeline
 
 ```
-1. zone_console uploads raw asset
+1. zone_console uploads packed scene (.tscn)
    POST /storage  multipart  →  zone-backend:4000
 
 2. zone-backend stores raw file in VersityGW
-   PUT versitygw:7070/uro-uploads/<id>
+   PUT versitygw:7070/uro-uploads/<id>.tscn
    writes shared_files record  (store_url set, baked_url null)
 
 3. zone-backend spawns baker container (one-shot, exits when done)
    docker run --rm \
      --network multiplayer-fabric-hosting_default \
-     -v /tmp/scene-<id>:/scene \
      -e ASSET_ID=<id> \
+     -e CONTENT_TYPE=avatar|map \
      -e URO_URL=http://zone-backend:4000 \
      -e VERSITYGW_URL=http://versitygw:7070 \
      multiplayer-fabric-godot-baker:latest
 
 4. baker container
-   copies /vsk-project → temp workspace
-   godot --editor --headless --quit --path <workspace>
-     (loads vsk_importer_exporter EditorPlugin, validates + imports asset)
-   AriaStorage.create_chunks(".godot/imported/", compression: :zstd)
-     → uploads .cacnk files to versitygw:7070/uro-uploads/chunks/
-   AriaStorage.create_index_from_chunks(chunks, format: :caidx)
-     → writes <id>.caidx
-   PUT <id>.caidx → versitygw:7070/uro-uploads/<id>.caidx
-   POST http://zone-backend:4000/storage/<id>/bake
-        {baked_url: "http://versitygw:7070/uro-uploads/<id>.caidx"}
+   a. fetch manifest → get store_url
+   b. download .tscn from VersityGW → workspace/scenes/<id>.tscn
+   c. copy /vsk-project → workspace/ (full project with addons)
+   d. godot --editor --headless --quit --path workspace/
+        (Godot resource import: textures, meshes)
+   e. godot --headless --path workspace/ \
+        --script res://baker/run.gd -- <content_type> scenes/<id>.tscn
+        (VSKImporter validates scene; VSKExporter saves cleaned .scn)
+   f. AriaStorage.create_chunks(out/<id>.scn, compression: :zstd)
+        → uploads .cacnk files to versitygw:7070/uro-uploads/chunks/
+   g. AriaStorage.create_index_from_chunks(chunks, format: :caidx)
+        → writes <id>.caidx
+   h. PUT <id>.caidx → versitygw:7070/uro-uploads/<id>.caidx
+   i. POST http://zone-backend:4000/storage/<id>/bake
+           {baked_url: "http://versitygw:7070/uro-uploads/<id>.caidx"}
    exit 0
 
 5. zone-backend writes baked_url to shared_files record in CockroachDB
 
 6. zone client fetches manifest
    POST /storage/<id>/manifest
-   → {store_url, chunks, baked_url}
+   → {store_url, baked_url}
 
-7. zone server reconstructs .godot/imported/
+7. zone server reconstructs cleaned scene
    fetch .caidx from baked_url
    for each chunk not in local cache:
      GET versitygw:7070/uro-uploads/chunks/<ab>/<cd>/<hash>.cacnk
-   write chunks to local import cache
+   reassemble .scn from chunks
 ```
+
+## Baker GDScript entrypoint (not yet written)
+
+`res://baker/run.gd` (inside `multiplayer-fabric-baker`) needs to:
+
+```gdscript
+# Called as: godot --headless --path <workspace> --script res://baker/run.gd
+#            -- avatar|map scenes/<id>.tscn out/<id>.scn
+extends SceneTree
+
+func _init():
+    var args = OS.get_cmdline_user_args()  # ["avatar", "scenes/<id>.tscn", "out/<id>.scn"]
+    var content_type = args[0]             # "avatar" or "map"
+    var scene_path   = "res://" + args[1]
+    var out_path     = "res://" + args[2]
+
+    var packed: PackedScene = ResourceLoader.load(scene_path)
+
+    var result: Dictionary
+    match content_type:
+        "avatar":
+            var importer = VSKImporter.new()
+            result = importer.clean_packed_scene_for_avatar(packed)
+        "map":
+            result = VSKImporter.clean_packed_scene_for_map(packed)
+
+    if result["packed_scene"] == null:
+        push_error("Validation failed: " + str(result["result"]))
+        quit(1)
+        return
+
+    var exporter = VSKExporter.new()
+    var root = Node.new()
+    var node = result["packed_scene"].instantiate()
+    root.add_child(node)
+    match content_type:
+        "avatar": exporter.export_avatar(root, node, out_path)
+        "map":    exporter.export_map(root, node, out_path)
+
+    quit(0)
+```
+
+This script lives in `multiplayer-fabric-baker` so it is present at
+`res://baker/run.gd` when the project is copied into the baker workspace.
 
 ## Baker image
 
@@ -105,6 +184,8 @@ Migration: `priv/repo/migrations/20250420000001_add_bake_fields_to_shared_files.
 | `lib/uro/controllers/storage.ex` | HTTP handlers: create, manifest, bake |
 | `lib/uro/shared_content.ex` | Context: DB queries, set_baked_url |
 | `lib/uro/shared_content/shared_file.ex` | Ecto schema + changesets |
+| `addons/vsk_importer_exporter/vsk_importer.gd` | `clean_packed_scene_for_*` — validates node tree against allowlist |
+| `addons/vsk_importer_exporter/vsk_exporter.gd` | `export_avatar/map` — deduplicates, cleans, saves `.scn` |
 | `test/zone_console/uro_client_bake_test.exs` | Integration test (`:prod` tag) |
 
 ## Monitoring the baker
