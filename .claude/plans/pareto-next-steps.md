@@ -1,46 +1,10 @@
 # Multiplayer Fabric — Pareto Next Steps
 
-## The secret (from the gist)
-
-The truth almost nobody is acting on: the Improbable failure was an architectural mistake, not a vision mistake. SpatialOS tried to sit above the game engine and abstract the spatial problem away from it entirely. The abstraction leaked under real load because latency, interest management, and zone state are not infrastructure problems separable from the engine — they are game problems that have to be solved inside it.
-
-The spatial OS problem is real. Solving it inside the engine rather than above it is the correct approach, and four years after Improbable's collapse, nobody has built that. multiplayer-fabric is positioned to fill that gap as Godot modules rather than a cloud layer the engine reports to.
-
----
-
-## 2026 competitive landscape
-
-| Project                | Status                            | What it does                                   | Gap                                                                  |
-| ---------------------- | --------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------- |
-| SpacetimeDB v2.0       | Shipped, free tier, growing       | DB-as-server, WASM logic, BitCraft ships on it | No zone topology, no content delivery, no WebTransport, BSL licensed |
-| Nakama                 | Dominant, 1T req/month            | Full-stack self-hostable backend               | No zone streaming, no spatial partitioning                           |
-| Rivet                  | YC-backed, pivoting to Actors     | Self-hostable server orchestration (Rust)      | Orchestration only, no zone stitching, no game logic                 |
-| W4 Cloud               | Running, W4 Build killed Jan 2026 | Godot-specific hosted backend                  | Hosted only, no zone architecture, uncertain future                  |
-| Talo                   | Small, MIT licensed               | Auth, leaderboards, saves for indie/Godot      | No multiplayer, no zones                                             |
-| Agones                 | Stable                            | Kubernetes server pod management               | Orchestration only                                                   |
-| KBEngine               | Unmaintained                      | C++/Python MMOG zones                          | No WebTransport, stagnant                                            |
-| Colyseus               | Stable                            | Node.js room server                            | No zone continuity                                                   |
-| PlayFab / EOS / Photon | Managed cloud                     | Everything, hosted                             | Vendor lock-in                                                       |
-| casync / desync        | Stable, unmoved                   | Content-addressed sync for OS images           | Never applied to game assets                                         |
-| OpenFGA                | CNCF Incubating, v1.13            | Zanzibar ReBAC                                 | Zero adoption in any game backend                                    |
-
-SpacetimeDB is the most significant new entrant. BitCraft Online open-sourced its server code in January 2026. SpacetimeDB handles game logic well but does not handle zone topology, geographic partitioning, content delivery, or transport. That problem is unsolved.
-
----
-
-## Three gaps confirmed unfilled in 2026
-
-**Zone stitching outside Unreal.** Open World Server exists for Unreal. For Godot, Unity, or any other engine, there is no production-ready zone-border handoff layer. Not stalled — simply absent.
-
-**Content-addressed game asset delivery.** casync solved delta-sync for OS images. Nobody has applied that to game world data. No shipped solution exists for a client entering a zone and delta-syncing only the asset chunks it doesn't already have. The math is solved; the integration is not built.
-
-**ReBAC as a game permission primitive.** OpenFGA and SpiceDB both matured in 2025-2026. Both remain general-purpose auth systems with zero adoption in published game backends. "Who can open this door inside this guild-controlled zone" is a graph traversal, and every existing backend still answers it with role checks or custom ACL tables.
+Strategic context lives in `multiplayer-fabric-strategy.md`. This file owns the execution plan: architecture constraints, task ordering, and actionable checklists.
 
 ---
 
 ## Architecture boundary (read before touching code)
-
-The three "backends" are different things serving different purposes:
 
 | Component                          | Language            | Role                                                 |
 | ---------------------------------- | ------------------- | ---------------------------------------------------- |
@@ -86,7 +50,7 @@ Taskweft's C++ is compiled into a BEAM NIF `.so`. Godot's C++ is compiled into t
 
 ### 1. Publish a one-command docker compose showing all three layers
 
-Addresses gist move #5 (target the solo Godot developer first).
+Addresses strategy move #5 (target the solo Godot developer first).
 
 `multiplayer-fabric-hosting` already has a compose file and zone-backend is live at hub-700a.chibifire.com. The differentiator is the full spatial layer — zone handoff, content delivery, and permissions that SpacetimeDB does not provide — but a product nobody can run yet is not a product. Ship the wedge first; the differentiated layer lands in v0.2.
 
@@ -98,7 +62,7 @@ Addresses gist move #5 (target the solo Godot developer first).
 
 ### 2. Wire taskweft ReBAC into zone-backend permissions
 
-Addresses gist move #3 (ReBAC as zone permission model). Lands as v0.2 immediately after the compose story ships.
+Addresses strategy move #3 (ReBAC as zone permission model). Lands as v0.2 immediately after the compose story ships.
 
 `multiplayer-fabric-taskweft` has a fully-proven C++ NIF ReBAC graph (93 PropCheck properties passing). `zone-backend` has `user_relations/` and `user_content/` — the permission call sites exist but still use flat boolean guards (`can_upload_maps`, `is_admin`).
 
@@ -111,7 +75,7 @@ Addresses gist move #3 (ReBAC as zone permission model). Lands as v0.2 immediate
 
 ### 3. Zone crossing → desync delta-sync trigger
 
-Addresses gist move #2 (CAIBX chunk delivery into zone entry).
+Addresses strategy move #2 (CAIBX chunk delivery into zone entry).
 
 `multiplayer-fabric-desync` is a complete Go implementation of casync with S3, HTTP, and local backends. Zone-backend has zone metadata and player-position concepts. The content-addressing math is solved. The game-engine integration does not exist anywhere.
 
@@ -122,7 +86,7 @@ Addresses gist move #2 (CAIBX chunk delivery into zone entry).
 
 ### 4. Godot client-side WebTransport module
 
-Addresses gist move #1 (own the Godot-native WebTransport story).
+Addresses strategy move #1 (own the Godot-native WebTransport story).
 
 WebTransport datagrams are strictly better than ENet for browser-accessible zones. Proposal #3899 has been open for four years with no merge. No shipped Godot project uses WebTransport as its primary transport. The server side (`multiplayer-fabric-webtransport` Elixir NIF over wtransport Rust) is complete.
 
@@ -133,7 +97,7 @@ WebTransport datagrams are strictly better than ENet for browser-accessible zone
 
 ### 5. SQLite-per-zone with WAL replay
 
-Addresses gist move #4 (SQLite-per-zone with deterministic replay).
+Addresses strategy move #4 (SQLite-per-zone with deterministic replay).
 
 SpacetimeDB keeps everything in memory. KBEngine uses MySQL. `multiplayer-fabric-taskweft` already depends on `exqlite` and has a `store.ex`. A zone server that can replay from a SQLite journal after a crash recovers exact state — something no vendor platform can offer without admitting their infrastructure fails.
 
@@ -148,4 +112,4 @@ Items 1 and 2 are almost entirely assembly of existing pieces — the code is wr
 
 Item 1 (compose) ships first because distribution matters as much as product. A running demo that a solo developer can reach in one command gets shared. Item 2 (ReBAC) ships immediately after as v0.2 — it upgrades the running system from "also a backend" to "the only backend with a permission graph." Items 3 and 4 follow to complete the three-layer claim demonstrable in a single `docker compose up` before writing significant new code.
 
-The gist's five moves map to tiers as follows: move #5 and #3 → tier 1; move #2 and #1 → tier 2; move #4 → tier 3.
+Strategy moves map to tiers: move #5 and #3 → tier 1; move #2 and #1 → tier 2; move #4 → tier 3.
