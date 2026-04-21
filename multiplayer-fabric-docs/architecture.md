@@ -20,9 +20,9 @@ zone-backend:4000  (Phoenix/Uro, Docker)
 
 zone-700a.chibifire.com
   │  DNS A record → 173.180.240.105  (orange cloud OFF — Cloudflare does not proxy UDP)
-  │  Router forwards UDP 7443 → host machine
+  │  Router forwards UDP 7443–7542 → host machine  (100-port pool, one port per zone instance)
   ▼
-zone-server:7443/udp  (Godot headless, Docker, editor=no build)
+zone-server:7443–7542/udp  (Godot headless, Docker, editor=no build, up to 100 concurrent zones)
   └── WebTransport / QUIC / picoquic
 ```
 
@@ -43,16 +43,17 @@ a Cloudflare Origin Certificate and listens on TCP 443; it reverse-proxies
 
 WebTransport uses QUIC over UDP. Cloudflare does not proxy UDP, so
 `zone-700a.chibifire.com` is a plain DNS A record (orange cloud off) pointing
-directly to the host machine. The router forwards UDP 7443 to the Docker zone
-server. Clients pin the zone server's self-signed certificate using
-`ZONE_CERT_HASH_B64`.
+directly to the host machine. The router forwards UDP 7443–7542 to the host;
+the orchestrator assigns one port from this pool to each zone server instance.
+Clients pin the zone server's self-signed certificate using `ZONE_CERT_HASH_B64`.
 
 ### Zone servers
 
 A **zone** is a running WebTransport game server (e.g. `zone-700a.chibifire.com:7443`).
-Zone servers register themselves in CockroachDB via `POST /shards` on boot, then
-send `PUT /shards/:id` heartbeats every ~25 s. `ZoneJanitor` culls entries with no
-heartbeat in 30 s.
+Up to 100 zones can run concurrently on one host, each assigned a distinct port from
+the pool UDP 7443–7542. Zone servers register themselves in CockroachDB via
+`POST /shards` on boot, then send `PUT /shards/:id` heartbeats every ~25 s.
+`ZoneJanitor` culls entries with no heartbeat in 30 s.
 
 ### Authority and interest
 
