@@ -13,8 +13,8 @@ zone server boots
   → every ~25 s: PUT /shards/:id  (touches updated_at)
 
 ZoneJanitor (zone-backend GenServer)
-  → runs every 10 s
-  → deletes zones where updated_at < now - 30 s
+  → runs every 30 days (config :stale_zone_interval)
+  → deletes zones where updated_at < now - 3 months (config :stale_zone_cutoff)
 ```
 
 Note: the HTTP endpoints are currently named `/shards` in the implementation.
@@ -35,7 +35,7 @@ hash when the zone server container starts before it has registered itself.
 ## Database schema
 
 ```sql
-CREATE TABLE shards (
+CREATE TABLE zones (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id      UUID REFERENCES users(id),
   address      TEXT NOT NULL,
@@ -50,7 +50,9 @@ CREATE TABLE shards (
 );
 ```
 
-Migration: `priv/repo/migrations/20250420000000_add_cert_hash_to_shards.exs`
+Migrations:
+- `priv/repo/migrations/20250420000000_add_cert_hash_to_shards.exs` — added `cert_hash` (table was named `shards` at this point)
+- `priv/repo/migrations/20260421141936_rename_shards_to_zones.exs` — renamed table to `zones`
 
 ## Freshness query
 
@@ -68,10 +70,10 @@ end
 
 | File | Role |
 |------|------|
-| `lib/uro/v_sekai/shard.ex` | Ecto schema + changeset + `to_json_schema/1` |
-| `lib/uro/v_sekai/shard_janitor.ex` | GenServer that culls stale zones |
+| `lib/uro/v_sekai/zone.ex` | Ecto schema + changeset + `to_json_schema/1` |
+| `lib/uro/v_sekai/zone_janitor.ex` | GenServer that culls stale zones |
 | `lib/uro/v_sekai.ex` | Context: `list_fresh_zones`, CRUD |
-| `lib/uro/controllers/shard_controller.ex` | HTTP handlers |
+| `lib/uro/controllers/zone.ex` | HTTP handlers |
 
 ## Cloudflare DNS note
 

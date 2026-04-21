@@ -110,7 +110,7 @@ shared_files
   baked_url     .caidx index URL (set after baker completes)
   uploader_id → users
 
-zones  (table: shards)
+zones
   id (binary_id)
   address, port
   map, name
