@@ -123,7 +123,7 @@ docker build --target baker \
 | 3 | `UroClient.get_manifest/2` | done |
 | 4 | `CMD_INSTANCE_ASSET` wire encoding (100-byte packet) | done |
 | 5 | `instance` console command — sends packet to zone server | done |
-| 6 | Asset baker — Docker `editor=yes`, casync `.caidx` output | in progress |
+| 6 | Asset baker — Docker `editor=yes`, casync `.caidx` output | done |
 | 7 | Zone orchestrator — Docker `editor=no` zone server lifecycle | planned |
 | 8 | Godot zone handler — authority zone runs instance pipeline | planned |
 | 9 | Round-trip smoke test — upload → instance → entity list on prod | planned |
