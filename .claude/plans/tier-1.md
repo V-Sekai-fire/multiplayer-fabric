@@ -35,7 +35,7 @@ Addresses strategy move #5 (target the solo Godot developer first).
 
 - [x] Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
 - [x] Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
-- [ ] Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
+- [x] Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
 
 ---
 
