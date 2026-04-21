@@ -52,21 +52,9 @@ The SpacetimeDB gap is the most important one to understand precisely. Spacetime
 
 WebTransport datagrams are strictly better than ENet for browser-accessible zones. Proposal #3899 has been open for four years with no merge. No shipped Godot project uses WebTransport as its primary transport. multiplayer-fabric has it wired today. That is a four-year head start on the only production implementation.
 
-### 2. Wire CAIBX chunk delivery into zone entry
+### 2. Target the solo Godot developer first, then expand
 
-When a player crosses a zone boundary, the client should delta-sync only the world data chunks it does not already have. The content-addressing math is solved. The game-engine integration does not exist anywhere. Building it here means owning the only implementation when zone-scale worlds become the default expectation.
-
-### 3. Make ReBAC the zone permission model from day one
-
-OpenFGA hit CNCF Incubating in October 2025. The tooling is mature. The adoption in game backends is zero. Coarse RBAC produces permission bugs at MMOG scale that are expensive to fix retroactively. Building the relationship graph in from the start means this cannot be bolt-on.
-
-### 4. SQLite-per-zone with deterministic replay
-
-SpacetimeDB keeps everything in memory. KBEngine uses MySQL. A zone server that can replay from a SQLite journal after a crash recovers exact state — something no vendor platform can offer without admitting their infrastructure fails. For self-hosters, this is the reliability story that justifies running their own stack.
-
-### 5. Target the solo Godot developer first, then expand
-
-SpacetimeDB's BitCraft reference is now public, which raises the bar. The differentiator is not "also a backend" — SpacetimeDB already owns that. The differentiator is the full spatial layer: zone handoff, content delivery, and permissions that SpacetimeDB does not provide. `docker compose up` and a working zone server with WebTransport, CAIBX, and ReBAC built in is the wedge. That combination does not exist anywhere else.
+`docker compose up` and a working zone server with WebTransport, CAIBX, and ReBAC built in is the wedge. The full spatial layer — zone handoff, content delivery, and permissions — is the differentiator. See `manuals/decisions/` for design documentation on each built component.
 
 ## The secret
 
