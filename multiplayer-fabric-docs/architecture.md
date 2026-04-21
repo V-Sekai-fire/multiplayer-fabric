@@ -6,38 +6,45 @@
 Internet
   │
   ▼
-Cloudflare edge  (TLS termination, HTTP/1.1 + HTTP/3)
-  │  hub-700a.chibifire.com → Cloudflare Tunnel
+Cloudflare edge  (orange cloud on, Full strict SSL)
+  │  hub-700a.chibifire.com  DNS A → 173.180.240.105
+  │  Router forwards TCP 443 → host machine
   ▼
-cloudflared  (Docker, tunnel token in .env)
-  │  routes hub-700a.chibifire.com → http://zone-backend:4000
+Caddy:443  (Docker, Cloudflare Origin Certificate)
+  │  /api/v1/* and /uploads/*  → uro:4000
+  │  everything else           → frontend:3000
   ▼
 zone-backend:4000  (Phoenix/Uro, Docker)
   ├── crdb:26257        CockroachDB single-node, ghcr.io/v-sekai/cockroach
   └── versitygw:7070    S3-compatible object store (local POSIX backend)
 
 zone-700a.chibifire.com
-  │  DNS A record → host public IP 173.180.240.105
-  │  Router forwards UDP 443 → host machine
+  │  DNS A record → 173.180.240.105  (orange cloud OFF — Cloudflare does not proxy UDP)
+  │  Router forwards UDP 7443 → host machine
   ▼
-zone-server:443/udp  (Godot headless, Docker, editor=no build)
-  └── WebTransport / QUIC / picoquic — NOT proxied by Cloudflare
+zone-server:7443/udp  (Godot headless, Docker, editor=no build)
+  └── WebTransport / QUIC / picoquic
 ```
 
 All services run in the same Docker Compose project on one host machine.
+TLS for the HTTP API is terminated by Caddy using a Cloudflare Origin Certificate
+(not a tunnel). The zone server uses a self-signed certificate; clients pin it
+via `ZONE_CERT_HASH_B64`.
 
 ## Key design decisions
 
-### Cloudflare Tunnel for HTTP, direct UDP for WebTransport
+### Cloudflare Origin Certificate for HTTP, direct UDP for WebTransport
 
-Cloudflare Tunnel carries all `hub-700a.chibifire.com` HTTP traffic. TLS
-terminates at the Cloudflare edge; the tunnel delivers plain HTTP/1.1 to
-`zone-backend:4000` on the Docker-internal network.
+`hub-700a.chibifire.com` is proxied by Cloudflare (orange cloud on). TLS
+terminates at the Cloudflare edge under Full (strict) SSL mode. Caddy holds
+a Cloudflare Origin Certificate and listens on TCP 443; it reverse-proxies
+`/api/v1/*` and `/uploads/*` to `uro:4000` and everything else to
+`frontend:3000`. No cloudflared tunnel is used.
 
 WebTransport uses QUIC over UDP. Cloudflare does not proxy UDP, so
 `zone-700a.chibifire.com` is a plain DNS A record (orange cloud off) pointing
-directly to the host machine. The router forwards UDP 443 to the Docker zone
-server port. Clients pin the zone server's self-signed certificate using
+directly to the host machine. The router forwards UDP 7443 to the Docker zone
+server. Clients pin the zone server's self-signed certificate using
 `ZONE_CERT_HASH_B64`.
 
 ### Shard vs zone distinction
