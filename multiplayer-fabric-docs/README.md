@@ -11,7 +11,7 @@ An open-source social VR platform built on a custom Godot Engine fork.
 | [API reference](api.md) | HTTP endpoints exposed by `zone-backend` |
 | [Authentication](authentication.md) | Pow session auth and Clerk JWT integration |
 | [Asset pipeline](assets.md) | Upload → casync bake → manifest → zone instance |
-| [Shards](shards.md) | Shard model, zone topology, registration protocol |
+| [Zones](zones.md) | Zone model, topology, registration protocol |
 | [Zone console](zone-console.md) | `zone_console` CLI: commands and wire protocol |
 | [Development](development.md) | Test commands, build targets, red-green-refactor workflow |
 

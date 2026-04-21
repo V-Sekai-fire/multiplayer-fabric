@@ -18,9 +18,6 @@ git submodule update --init --recursive
 Create `multiplayer-fabric-hosting/.env`:
 
 ```sh
-# Cloudflare Tunnel token (from one.dash.cloudflare.com → Networks → Tunnels)
-CLOUDFLARE_TUNNEL_TOKEN=<token>
-
 # Public hostnames
 URL=https://hub-700a.chibifire.com/api/v1/
 ROOT_ORIGIN=https://hub-700a.chibifire.com
@@ -60,7 +57,7 @@ docker compose up -d
 ```
 
 Services started (in order): `crdb-certs-init` → `crdb` → `versitygw` →
-`versitygw-init` → `zone-backend` → `cloudflared`, `zone-server`.
+`versitygw-init` → `zone-backend` → `zone-server`.
 
 `crdb-certs-init` generates a CA cert, node cert, and `root` client cert into
 the `crdbcerts` Docker volume on first boot (idempotent). CockroachDB and
@@ -70,7 +67,7 @@ zone-backend both mount this volume; zone-backend connects with
 ## Smoke check
 
 ```sh
-# zone-backend via Cloudflare Tunnel
+# zone-backend via Caddy reverse proxy
 curl -s https://hub-700a.chibifire.com/health
 # {"services":{"uro":"healthy"}}
 
@@ -106,7 +103,6 @@ docker compose restart zone-backend
 ```sh
 docker logs -f multiplayer-fabric-hosting-zone-backend-1
 docker logs -f multiplayer-fabric-hosting-zone-server-1
-docker logs -f multiplayer-fabric-hosting-cloudflared-1
 ```
 
 ## Stop the stack
