@@ -71,5 +71,3 @@ SpacetimeDB's BitCraft reference is now public, which raises the bar. The differ
 ## The secret
 
 The Improbable failure was an architectural mistake, not a vision mistake. The spatial OS problem is real. Solving it inside the engine rather than above it is the correct approach, and four years after Improbable's collapse, nobody has built that.
-
-Execution plan and task checklists live in `architecture.md`.
