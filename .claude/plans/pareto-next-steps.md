@@ -60,11 +60,29 @@ Taskweft's C++ is compiled into a BEAM NIF `.so`. Godot's C++ is compiled into t
 
 ## Tier 1 — Do now, most value already built
 
-### 1. Wire taskweft ReBAC into zone-backend permissions
+### 1. Publish a one-command docker compose showing all three layers
+
+**Effort: low — Impact: high — ~75% built**
+
+Addresses gist move #5 (target the solo Godot developer first).
+
+`multiplayer-fabric-hosting` already has a compose file and zone-backend is live at hub-700a.chibifire.com. The differentiator is the full spatial layer — zone handoff, content delivery, and permissions that SpacetimeDB does not provide — but a product nobody can run yet is not a product. Ship the wedge first; the differentiated layer lands in v0.2.
+
+**What to do:**
+
+- Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
+- Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
+- Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
+
+The wedge product is essentially already running — it just is not packaged as a single `docker compose up` story.
+
+---
+
+### 2. Wire taskweft ReBAC into zone-backend permissions
 
 **Effort: low — Impact: high — ~80% built**
 
-Addresses gist move #3 (ReBAC as zone permission model) and move #5 (solo developer wedge).
+Addresses gist move #3 (ReBAC as zone permission model). Lands as v0.2 immediately after the compose story ships.
 
 `multiplayer-fabric-taskweft` has a fully-proven C++ NIF ReBAC graph (93 PropCheck properties passing). `zone-backend` has `user_relations/` and `user_content/` — the permission call sites exist but still use flat boolean guards (`can_upload_maps`, `is_admin`).
 
@@ -76,22 +94,6 @@ Addresses gist move #3 (ReBAC as zone permission model) and move #5 (solo develo
 - Godot module stays unchanged — it checks capabilities in the JWT, not the graph
 
 Zero new infrastructure. Zero other project anywhere has this.
-
----
-
-### 2. Publish a one-command docker compose showing all three layers
-
-**Effort: low — Impact: high — ~75% built**
-
-Addresses gist move #5 (target the solo Godot developer first).
-
-`multiplayer-fabric-hosting` already has a compose file and zone-backend is live at hub-700a.chibifire.com. The differentiator is not "also a backend" — SpacetimeDB already owns that. The differentiator is the full spatial layer: zone handoff, content delivery, and permissions that SpacetimeDB does not provide.
-
-**What to do:**
-
-- After #1 above, update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content
-- Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
-- The wedge product the gist describes is essentially already running — it just isn't packaged as a single `docker compose up` story
 
 ---
 
@@ -149,6 +151,8 @@ SpacetimeDB keeps everything in memory. KBEngine uses MySQL. `multiplayer-fabric
 
 ## The pattern
 
-Items 1 and 2 are almost entirely assembly of existing pieces — the code is written, it just isn't wired together or framed as a product. Items 3 and 4 each need one new connector on top of a complete library. Item 5 requires a new architectural layer. This ordering delivers the full three-layer claim (WebTransport + CAIBX + ReBAC) demonstrable in a single `docker compose up` before writing significant new code.
+Items 1 and 2 are almost entirely assembly of existing pieces — the code is written, it just is not wired together or framed as a product. Items 3 and 4 each need one new connector on top of a complete library. Item 5 requires a new architectural layer.
 
-The gist's five moves map to tiers as follows: move #3 and #5 → tier 1; move #2 and #1 → tier 2; move #4 → tier 3.
+Item 1 (compose) ships first because distribution matters as much as product. A running demo that a solo developer can reach in one command gets shared. Item 2 (ReBAC) ships immediately after as v0.2 — it upgrades the running system from "also a backend" to "the only backend with a permission graph." Items 3 and 4 follow to complete the three-layer claim demonstrable in a single `docker compose up` before writing significant new code.
+
+The gist's five moves map to tiers as follows: move #5 and #3 → tier 1; move #2 and #1 → tier 2; move #4 → tier 3.
