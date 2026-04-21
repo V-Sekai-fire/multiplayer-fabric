@@ -38,12 +38,14 @@ missing when an asset updates.
      multiplayer-fabric-godot-baker:latest
 
 4. baker container
-   godot --headless --path /scene --import
-   AriaStorage.ChunkUploader.chunk_directory(".godot/imported")
+   copies /vsk-project → temp workspace
+   godot --editor --headless --quit --path <workspace>
+     (loads vsk_importer_exporter EditorPlugin, validates + imports asset)
+   AriaStorage.create_chunks(".godot/imported/", compression: :zstd)
      → uploads .cacnk files to versitygw:7070/uro-uploads/chunks/
-   AriaStorage.Index.write_caidx(chunks)
-     → writes /out/<id>.caidx
-   PUT /out/<id>.caidx → versitygw:7070/uro-uploads/<id>.caidx
+   AriaStorage.create_index_from_chunks(chunks, format: :caidx)
+     → writes <id>.caidx
+   PUT <id>.caidx → versitygw:7070/uro-uploads/<id>.caidx
    POST http://zone-backend:4000/storage/<id>/bake
         {baked_url: "http://versitygw:7070/uro-uploads/<id>.caidx"}
    exit 0
@@ -63,19 +65,28 @@ missing when an asset updates.
 
 ## Baker image
 
-The baker image compiles Godot with `editor=yes` so it can run the headless
-import pipeline. Zone servers use `editor=no` (smaller, no editor code).
+The baker image uses a pre-built Godot editor binary (`editor=yes`) so
+`vsk_importer_exporter` and its EditorPlugin system can load. Zone servers
+use a separate `editor=no` binary (smaller).
 
-Build the baker image:
+The build context requires `vsk-project/` — a minimal copy of
+`multiplayer-fabric-baker` (15 MB, stripped of XR/UI/animation addons).
 
 ```sh
 cd multiplayer-fabric-godot
-docker build --target baker \
-  -t multiplayer-fabric-godot-baker:latest \
-  -f Dockerfile.baker .
+
+# Populate build context from multiplayer-fabric-baker
+bash baker/populate-vsk-project.sh [../multiplayer-fabric-baker]
+
+docker build -t multiplayer-fabric-godot-baker:latest -f Dockerfile.baker .
 ```
 
-SCons flags: `editor=yes scons_cache_limit=4096 linuxbsd headless`
+To regenerate `multiplayer-fabric-baker` when `multiplayer-fabric-rx` changes:
+
+```sh
+bash baker/regenerate-baker-project.sh [../multiplayer-fabric-rx] [../multiplayer-fabric-baker]
+# commit + push multiplayer-fabric-baker, then update its submodule pointer
+```
 
 ## Database schema
 

@@ -109,9 +109,19 @@ cd multiplayer-fabric-godot
 docker build --target zone-server \
   -t multiplayer-fabric-godot-server:latest -f Dockerfile .
 
-# Baker (editor=yes, used for headless import)
-docker build --target baker \
-  -t multiplayer-fabric-godot-baker:latest -f Dockerfile.baker .
+# Baker (editor=yes, used for headless import via vsk_importer_exporter)
+# Populate the build context from multiplayer-fabric-baker first:
+bash baker/populate-vsk-project.sh [../multiplayer-fabric-baker]
+docker build -t multiplayer-fabric-godot-baker:latest -f Dockerfile.baker .
+```
+
+`multiplayer-fabric-baker` is the canonical minimal Godot project (15 MB,
+stripped of XR/UI/animation addons). When `multiplayer-fabric-rx` changes,
+regenerate it with:
+
+```sh
+bash baker/regenerate-baker-project.sh [../multiplayer-fabric-rx] [../multiplayer-fabric-baker]
+# then commit + push multiplayer-fabric-baker
 ```
 
 ## Asset streaming implementation status
