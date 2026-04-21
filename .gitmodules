@@ -68,3 +68,6 @@
 [submodule "multiplayer-fabric-hosting"]
 	path = multiplayer-fabric-hosting
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-hosting.git
+[submodule "multiplayer-fabric-baker"]
+	path = multiplayer-fabric-baker
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-baker.git
