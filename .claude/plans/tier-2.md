@@ -9,7 +9,7 @@ Architecture constraints: `architecture.md`
 
 ## Cleanup: delete stale zone_console copy in godot repo
 
-- [ ] Delete `modules/multiplayer_fabric_mmog/tools/zone_console` from `multiplayer-fabric-godot` — the canonical source is `multiplayer-fabric-zone-console`; the in-tree copy is now dead weight
+- [x] Delete `modules/multiplayer_fabric_mmog/tools/zone_console` from `multiplayer-fabric-godot` — directory never existed in any branch; already clean
 
 ---
 
@@ -21,8 +21,8 @@ Addresses strategy move #2 (CAIBX chunk delivery into zone entry).
 
 `multiplayer-fabric-desync` is a complete Go implementation of casync with S3, HTTP, and local backends. Zone-backend has zone metadata and player-position concepts. The content-addressing math is solved. The game-engine integration does not exist anywhere.
 
-- [ ] When the zone server decides a player has crossed a boundary, emit a desync index URL to the client so it fetches only the chunks it lacks
-- [ ] One Phoenix channel message + a desync HTTP server pointed at the zone's asset store
+- [x] When the zone server decides a player has crossed a boundary, emit a desync index URL to the client so it fetches only the chunks it lacks
+- [x] One Phoenix channel message + a desync HTTP server pointed at the zone's asset store
 
 ---
 
