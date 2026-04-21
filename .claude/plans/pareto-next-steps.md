@@ -58,94 +58,87 @@ Taskweft's C++ is compiled into a BEAM NIF `.so`. Godot's C++ is compiled into t
 
 ---
 
-## Tier 1 — Do now, most value already built
+## Tiers
+
+### Tier 1 — Do now, most value already built
+
+| #   | Task                                  | Effort | Impact | Built |
+| --- | ------------------------------------- | ------ | ------ | ----- |
+| 1   | Publish one-command docker compose    | low    | high   | ~75%  |
+| 2   | Wire taskweft ReBAC into zone-backend | low    | high   | ~80%  |
+
+### Tier 2 — Do next, most of the hard work exists
+
+| #   | Task                                      | Effort | Impact | Built |
+| --- | ----------------------------------------- | ------ | ------ | ----- |
+| 3   | Zone crossing → desync delta-sync trigger | medium | high   | ~50%  |
+| 4   | Godot client-side WebTransport module     | high   | high   | ~40%  |
+
+### Tier 3 — Real value, furthest from complete
+
+| #   | Task                            | Effort | Impact | Built |
+| --- | ------------------------------- | ------ | ------ | ----- |
+| 5   | SQLite-per-zone with WAL replay | high   | medium | ~25%  |
+
+---
+
+## Task details
 
 ### 1. Publish a one-command docker compose showing all three layers
-
-**Effort: low — Impact: high — ~75% built**
 
 Addresses gist move #5 (target the solo Godot developer first).
 
 `multiplayer-fabric-hosting` already has a compose file and zone-backend is live at hub-700a.chibifire.com. The differentiator is the full spatial layer — zone handoff, content delivery, and permissions that SpacetimeDB does not provide — but a product nobody can run yet is not a product. Ship the wedge first; the differentiated layer lands in v0.2.
 
-**What to do:**
-
-- Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
-- Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
-- Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
-
-The wedge product is essentially already running — it just is not packaged as a single `docker compose up` story.
+- [ ] Update compose so a solo developer gets: zone server + WebTransport listener + desync HTTP chunk server + ReBAC-gated content in one command
+- [ ] Add a worked example in the README: `docker compose up`, connect a Godot client, cross a zone boundary
+- [ ] Tag v0.1 once a developer outside the project can follow the README cold and reach a running zone server
 
 ---
 
 ### 2. Wire taskweft ReBAC into zone-backend permissions
 
-**Effort: low — Impact: high — ~80% built**
-
 Addresses gist move #3 (ReBAC as zone permission model). Lands as v0.2 immediately after the compose story ships.
 
 `multiplayer-fabric-taskweft` has a fully-proven C++ NIF ReBAC graph (93 PropCheck properties passing). `zone-backend` has `user_relations/` and `user_content/` — the permission call sites exist but still use flat boolean guards (`can_upload_maps`, `is_admin`).
 
-**What to do:**
-
-- Add `{:taskweft, github: "V-Sekai-fire/multiplayer-fabric-taskweft"}` to zone-backend's `mix.exs`
-- Define a relation schema: user `OWNS` content, user `IS_MEMBER_OF` zone
-- Replace the three permission plugs (`RequireMapUploadPermission`, `RequireAvatarUploadPermission`, `RequirePropUploadPermission`) with `Taskweft.ReBAC.check/3` calls
-- Godot module stays unchanged — it checks capabilities in the JWT, not the graph
-
-Zero new infrastructure. Zero other project anywhere has this.
+- [ ] Add `{:taskweft, github: "V-Sekai-fire/multiplayer-fabric-taskweft"}` to zone-backend's `mix.exs`
+- [ ] Define a relation schema: user `OWNS` content, user `IS_MEMBER_OF` zone
+- [ ] Replace `RequireMapUploadPermission`, `RequireAvatarUploadPermission`, `RequirePropUploadPermission` with `Taskweft.ReBAC.check/3` calls
+- [ ] Godot module stays unchanged — it checks capabilities in the JWT, not the graph
 
 ---
 
-## Tier 2 — Do next, most of the hard work exists
-
 ### 3. Zone crossing → desync delta-sync trigger
-
-**Effort: medium — Impact: high — ~50% built**
 
 Addresses gist move #2 (CAIBX chunk delivery into zone entry).
 
 `multiplayer-fabric-desync` is a complete Go implementation of casync with S3, HTTP, and local backends. Zone-backend has zone metadata and player-position concepts. The content-addressing math is solved. The game-engine integration does not exist anywhere.
 
-**What to do:**
-
-- When the zone server decides a player has crossed a boundary, emit a desync index URL to the client so it fetches only the chunks it lacks
-- One Phoenix channel message + a desync HTTP server pointed at the zone's asset store
-- Nobody has built this integration for any engine
+- [ ] When the zone server decides a player has crossed a boundary, emit a desync index URL to the client so it fetches only the chunks it lacks
+- [ ] One Phoenix channel message + a desync HTTP server pointed at the zone's asset store
 
 ---
 
 ### 4. Godot client-side WebTransport module
 
-**Effort: high — Impact: high — ~40% built**
-
 Addresses gist move #1 (own the Godot-native WebTransport story).
 
-WebTransport datagrams are strictly better than ENet for browser-accessible zones. Proposal #3899 has been open for four years with no merge. No shipped Godot project uses WebTransport as its primary transport. The server side (`multiplayer-fabric-webtransport` Elixir NIF over wtransport Rust) is complete. That is a four-year head start on the only production implementation.
+WebTransport datagrams are strictly better than ENet for browser-accessible zones. Proposal #3899 has been open for four years with no merge. No shipped Godot project uses WebTransport as its primary transport. The server side (`multiplayer-fabric-webtransport` Elixir NIF over wtransport Rust) is complete.
 
-**What to do:**
-
-- Implement a `NetworkedMultiplayerPeer` subclass in the `feat/module-multiplayer-fabric` branch backed by wtransport's C API
-- Closes Godot proposal #3899's gap without waiting for upstream merge
-- Completes the "only shipped Godot WebTransport title" claim
+- [ ] Implement a `NetworkedMultiplayerPeer` subclass in the `feat/module-multiplayer-fabric` branch backed by wtransport's C API
+- [ ] Closes Godot proposal #3899's gap without waiting for upstream merge
 
 ---
 
-## Tier 3 — Real value, but furthest from complete
-
 ### 5. SQLite-per-zone with WAL replay
-
-**Effort: high — Impact: medium — ~25% built**
 
 Addresses gist move #4 (SQLite-per-zone with deterministic replay).
 
 SpacetimeDB keeps everything in memory. KBEngine uses MySQL. `multiplayer-fabric-taskweft` already depends on `exqlite` and has a `store.ex`. A zone server that can replay from a SQLite journal after a crash recovers exact state — something no vendor platform can offer without admitting their infrastructure fails.
 
-**What to do:**
-
-- Design zone server to write all entity mutations as journal entries to SQLite WAL
-- On zone crash/restart, replay the WAL to recover exact state
-- This is the reliability story for self-hosters; build after the top four
+- [ ] Design zone server to write all entity mutations as journal entries to SQLite WAL
+- [ ] On zone crash/restart, replay the WAL to recover exact state
 
 ---
 
