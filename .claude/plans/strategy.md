@@ -4,15 +4,13 @@ Own the smallest viable market completely, then grow.
 
 ## The prior failure
 
-A well-funded company once pitched a distributed simulation platform as an OS for game worlds, arguing that existing servers could never make a world feel real. Two flagship games launched and failed. The platform shut down.
-
-The architecture was wrong. The platform sat above the engine and tried to abstract the spatial problem away. Latency, interest management, and zone state cannot be separated from the engine — they are game problems that must be solved inside it. The spatial simulation problem is real and nobody has solved it this way.
+A well-funded company once pitched a distributed simulation platform as an OS for game worlds, arguing that existing servers could never make a world feel real. Two flagship games launched and failed, and the platform shut down because the architecture was wrong: it sat above the engine and tried to abstract the spatial problem away. Latency, interest management, and zone state cannot be separated from the engine — they are game problems that must be solved inside it. The spatial simulation problem is real and nobody has solved it this way.
 
 multiplayer-fabric fills that gap: the same ambition, built as Godot modules instead of a cloud layer.
 
 ## Three uncharted gaps
 
-No production-ready zone-border handoff exists outside one proprietary engine, and the absence is structural rather than a matter of timing. The delta-sync approach from OS image distribution solves game asset delivery mathematically, but the game-engine integration has never been built. Relationship-based access control tooling is mature; adoption in game backends is zero.
+No production-ready zone-border handoff exists outside one proprietary engine, and the absence is structural. The delta-sync approach from OS image distribution solves game asset delivery mathematically, but the game-engine integration has never been built. Relationship-based access control tooling is mature; adoption in game backends is zero.
 
 ## Two moves
 
