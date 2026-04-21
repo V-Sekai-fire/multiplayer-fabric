@@ -59,8 +59,13 @@ cd multiplayer-fabric-hosting
 docker compose up -d
 ```
 
-Services started: `crdb`, `versitygw`, `versitygw-init`, `zone-backend`,
-`cloudflared`, `zone-server`.
+Services started (in order): `crdb-certs-init` → `crdb` → `versitygw` →
+`versitygw-init` → `zone-backend` → `cloudflared`, `zone-server`.
+
+`crdb-certs-init` generates a CA cert, node cert, and `root` client cert into
+the `crdbcerts` Docker volume on first boot (idempotent). CockroachDB and
+zone-backend both mount this volume; zone-backend connects with
+`sslmode=verify-full` using the generated client certificate.
 
 ## Smoke check
 
@@ -111,11 +116,13 @@ cd multiplayer-fabric-hosting
 docker compose down
 ```
 
-To also remove volumes (wipes all data):
+To also remove volumes (wipes all data, including TLS certs and database):
 
 ```sh
 docker compose down -v
 ```
+
+New TLS certs are generated automatically on the next `docker compose up`.
 
 ## Local development (zone-backend without Docker)
 
