@@ -36,9 +36,6 @@ AWS_S3_ENDPOINT=http://versitygw:7070
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
 
-# Clerk JWT auth (optional — only needed if using Clerk-issued sessions)
-CLERK_ISSUER=https://moral-mule-32.clerk.accounts.dev
-
 # Phoenix internals
 PHOENIX_KEY_BASE=<64-char random string>
 JOKEN_SIGNER=<32-char random string>
@@ -136,7 +133,6 @@ Environment variables used locally:
 
 ```sh
 export DATABASE_URL="postgresql://vsekai:vsekai@localhost:26257/vsekai?sslmode=disable"
-export CLERK_ISSUER="https://moral-mule-32.clerk.accounts.dev"
 export AWS_S3_BUCKET=uro-uploads
 export AWS_S3_ENDPOINT=http://localhost:7070
 export AWS_ACCESS_KEY_ID=minioadmin
