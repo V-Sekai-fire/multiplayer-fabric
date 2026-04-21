@@ -35,6 +35,30 @@ git commit -m "Update taskweft submodule pointer"
 
 Never commit changes directly to files inside a submodule from the root repo. Always `cd` into the submodule first. Each submodule has its own `CONTRIBUTING.md` — read it before making changes.
 
+## Mathematics and Proof Authority
+
+### multiplayer-fabric-predictive-bvh — primary proof source
+
+`multiplayer-fabric-predictive-bvh` is the **canonical mathematical authority** for all physics, geometry, and algorithmic proofs across the multiplayer fabric. It contains:
+
+- **Formal Lean 4 proofs** of core algorithms (Hilbert curves, BVH construction, interest management)
+- **O(1) per-entity complexity theorems** for MMO scaling
+- **Geometric stability proofs** for adversarial physics scenarios
+- **Rate-distortion optimization** bounds for bandwidth / latency tradeoffs
+
+**Integration rules:**
+- When porting algorithms to Elixir, C++, or other languages, the Lean formalization in `multiplayer-fabric-predictive-bvh` is the source of truth
+- Port implementations from **proof-verified code**, not from implementations in other languages
+- If an algorithm differs from the Lean proof, trust the proof; fix the implementation
+- Add new proofs to `multiplayer-fabric-predictive-bvh` before implementing in production code
+
+**Examples:**
+- 3D Hilbert curve: formalized in `multiplayer-fabric-predictive-bvh/PredictiveBVH.lean`; Elixir port in `multiplayer-fabric-deploy/lib/multiplayer_fabric_deploy/hilbert_curve.ex`
+- Interest management: formalized via ReBAC + Hilbert bounds; consumed by zone-console and zone servers
+- BVH structure: Lean proof of O(1) query time; C++ implementation in godot-mmog module
+
+Location: `/Users/ernest.lee/Desktop/multiplayer-fabric/multiplayer-fabric-predictive-bvh`
+
 ## Critical cross-submodule relationships
 
 ### multiplayer-fabric-godot — branch rules
