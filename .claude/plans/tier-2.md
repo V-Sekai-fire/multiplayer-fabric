@@ -7,6 +7,12 @@ Architecture constraints: `architecture.md`
 
 ---
 
+## Cleanup: delete stale zone_console copy in godot repo
+
+- [ ] Delete `modules/multiplayer_fabric_mmog/tools/zone_console` from `multiplayer-fabric-godot` — the canonical source is `multiplayer-fabric-zone-console`; the in-tree copy is now dead weight
+
+---
+
 ## 3. Zone crossing → desync delta-sync trigger
 
 **Effort: medium — Impact: high — ~50% built**
