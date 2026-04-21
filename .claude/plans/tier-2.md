@@ -28,11 +28,9 @@ Addresses strategy move #2 (CAIBX chunk delivery into zone entry).
 
 ## 4. Godot client-side WebTransport module
 
-**Effort: high — Impact: high — ~40% built**
+**Effort: high — Impact: high — already complete**
 
 Addresses strategy move #1 (own the Godot-native WebTransport story).
 
-WebTransport datagrams are strictly better than ENet for browser-accessible zones. Proposal #3899 has been open for four years with no merge. No shipped Godot project uses WebTransport as its primary transport. The server side (`multiplayer-fabric-webtransport` Elixir NIF over wtransport Rust) is complete.
-
-- [ ] Implement a `NetworkedMultiplayerPeer` subclass in the `feat/module-multiplayer-fabric` branch backed by wtransport's C API
-- [ ] Closes Godot proposal #3899's gap without waiting for upstream merge
+- [x] `modules/http3/web_transport_peer.cpp` + `web_transport_peer.h` implement the `NetworkedMultiplayerPeer` subclass backed by QUIC/WebTransport
+- [x] `modules/http3/http3_client.cpp`, `quic_client.cpp`, `quic_picoquic_backend.cpp` — full QUIC stack
