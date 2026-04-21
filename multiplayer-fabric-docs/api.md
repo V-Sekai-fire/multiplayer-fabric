@@ -130,13 +130,14 @@ and Clerk JWT).
 
 ---
 
-## Shards
+## Zones
 
-Shards are running WebTransport zone servers. Zone servers self-register on boot.
+Zone servers self-register on boot. The endpoints use the path `/shards`
+in the current implementation.
 
 ### GET /shards
 
-List all registered shards. No authentication required.
+List all registered zones. No authentication required.
 
 Response:
 ```json
@@ -145,7 +146,7 @@ Response:
     "shards": [
       {
         "address": "zone-700a.chibifire.com",
-        "port": 443,
+        "port": 7443,
         "map": "mire",
         "name": "Zone 700a",
         "current_users": 0,
@@ -159,14 +160,14 @@ Response:
 
 ### POST /shards
 
-Register a new shard (called by zone server on boot). Requires authentication.
+Register a new zone (called by zone server on boot). Requires authentication.
 
 Request:
 ```json
 {
   "shard": {
     "address": "zone-700a.chibifire.com",
-    "port": 443,
+    "port": 7443,
     "map": "mire",
     "name": "Zone 700a",
     "cert_hash": "<base64 SHA-256>"
@@ -181,7 +182,7 @@ Requires authentication.
 
 ### DELETE /shards/:id
 
-Deregister a shard. Requires authentication.
+Deregister a zone. Requires authentication.
 
 ---
 

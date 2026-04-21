@@ -56,7 +56,7 @@ Joined zone 0 at zone-700a.chibifire.com:443
 ```
 
 Connects to the zone server at the address returned by `GET /shards`, using
-the `cert_hash` from the shard record for certificate pinning.
+the `cert_hash` from the zone record for certificate pinning.
 
 ### instance
 

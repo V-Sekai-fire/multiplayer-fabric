@@ -1,27 +1,23 @@
-# Shards
+# Zones
 
-A **shard** is a running WebTransport zone server. It registers itself in
+A **zone** is a running WebTransport zone server. It registers itself in
 CockroachDB on boot, sends heartbeats to stay listed, and is culled automatically
 when heartbeats stop.
-
-## Shard vs zone
-
-A shard is the top-level WebTransport server (e.g. `zone-700a.chibifire.com:443`).
-A zone is a Hilbert-range spatial partition *inside* a shard. One shard can host
-many zones; shards cannot be nested.
 
 ## Self-registration flow
 
 ```
 zone server boots
   → POST /shards  {address, port, map, name, cert_hash}
-  → zone-backend writes row to shards table
+  → zone-backend writes row to zones table
   → every ~25 s: PUT /shards/:id  (touches updated_at)
 
-ShardJanitor (zone-backend GenServer)
+ZoneJanitor (zone-backend GenServer)
   → runs every 10 s
-  → deletes shards where updated_at < now - 30 s
+  → deletes zones where updated_at < now - 30 s
 ```
+
+Note: the HTTP endpoints are currently named `/shards` in the implementation.
 
 ## cert_hash
 
@@ -29,9 +25,9 @@ ShardJanitor (zone-backend GenServer)
 self-signed TLS certificate. Clients pin this value to authenticate the zone
 server connection without a CA chain.
 
-The value is supplied by the zone server in its `POST /shards` registration
-payload. It is exposed to clients via `GET /shards` so `zone_console` can
-pass it to the WebTransport connection.
+The value is supplied by the zone server in its registration payload. It is
+exposed to clients via `GET /shards` so `zone_console` can pass it to the
+WebTransport connection.
 
 `ZONE_CERT_HASH_B64` in `multiplayer-fabric-hosting/.env` pre-seeds the cert
 hash when the zone server container starts before it has registered itself.
@@ -60,9 +56,9 @@ Migration: `priv/repo/migrations/20250420000000_add_cert_hash_to_shards.exs`
 
 ```elixir
 # lib/uro/v_sekai.ex
-def list_fresh_shards do
+def list_fresh_zones do
   cutoff = DateTime.utc_now() |> DateTime.add(-30, :second)
-  from(s in Shard, where: s.updated_at > ^cutoff)
+  from(z in Zone, where: z.updated_at > ^cutoff)
   |> Repo.all()
   |> Repo.preload([:user])
 end
@@ -73,8 +69,8 @@ end
 | File | Role |
 |------|------|
 | `lib/uro/v_sekai/shard.ex` | Ecto schema + changeset + `to_json_schema/1` |
-| `lib/uro/v_sekai/shard_janitor.ex` | GenServer that culls stale shards |
-| `lib/uro/v_sekai.ex` | Context: `list_fresh_shards`, CRUD |
+| `lib/uro/v_sekai/shard_janitor.ex` | GenServer that culls stale zones |
+| `lib/uro/v_sekai.ex` | Context: `list_fresh_zones`, CRUD |
 | `lib/uro/controllers/shard_controller.ex` | HTTP handlers |
 
 ## Cloudflare DNS note
@@ -88,6 +84,6 @@ UDP traffic. The DNS A record points directly to the host machine's public IP.
 dig zone-700a.chibifire.com +short
 # expect: 173.180.240.105
 
-# Confirm UDP 443 is reachable
-nc -u -w2 zone-700a.chibifire.com 443 && echo "UDP open"
+# Confirm UDP 7443 is reachable
+nc -u -w2 zone-700a.chibifire.com 7443 && echo "UDP open"
 ```

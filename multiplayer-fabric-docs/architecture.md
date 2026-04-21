@@ -47,14 +47,11 @@ directly to the host machine. The router forwards UDP 7443 to the Docker zone
 server. Clients pin the zone server's self-signed certificate using
 `ZONE_CERT_HASH_B64`.
 
-### Shard vs zone distinction
+### Zone servers
 
-A **shard** is a running WebTransport game server (e.g. `zone-700a.chibifire.com:443`).
-A **zone** is a Hilbert-range spatial partition *within* a shard. One shard can contain
-many zones; a shard cannot be nested inside another shard.
-
+A **zone** is a running WebTransport game server (e.g. `zone-700a.chibifire.com:7443`).
 Zone servers register themselves in CockroachDB via `POST /shards` on boot, then
-send `PUT /shards/:id` heartbeats every ~25 s. `ShardJanitor` culls entries with no
+send `PUT /shards/:id` heartbeats every ~25 s. `ZoneJanitor` culls entries with no
 heartbeat in 30 s.
 
 ### Authority and interest
@@ -112,7 +109,7 @@ shared_files
   baked_url     .caidx index URL (set after baker completes)
   uploader_id → users
 
-shards
+zones  (table: shards)
   id (binary_id)
   address, port
   map, name
