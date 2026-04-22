@@ -2,3 +2,4 @@
 .obsidian/workspace.json
 .obsidian/.DS_Store
 /.playwright-mcp
+tmp/
