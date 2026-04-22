@@ -16,9 +16,6 @@
 [submodule "multiplayer-fabric-interaction-system"]
 	path = multiplayer-fabric-interaction-system
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system.git
-[submodule "multiplayer-fabric-merge"]
-	path = multiplayer-fabric-merge
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-merge.git
 [submodule "multiplayer-fabric-rx"]
 	path = multiplayer-fabric-rx
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-rx.git
