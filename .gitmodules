@@ -53,9 +53,6 @@
 [submodule "multiplayer-fabric-skills"]
 	path = multiplayer-fabric-skills
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-skills.git
-[submodule "multiplayer-fabric-fly"]
-	path = multiplayer-fabric-fly
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-fly.git
 [submodule "manuals"]
 	path = manuals
 	url = https://github.com/V-Sekai/manuals.git
