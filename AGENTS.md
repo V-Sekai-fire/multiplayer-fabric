@@ -30,7 +30,7 @@ cd ..
 
 # Record the updated submodule pointer in the root repo
 git add multiplayer-fabric-taskweft
-git commit -m "Update taskweft submodule pointer"
+git commit -m "Sync submodules: taskweft add streaming API"
 ```
 
 Never commit changes directly to files inside a submodule from the root repo. Always `cd` into the submodule first. Each submodule has its own `CONTRIBUTING.md` — read it before making changes.
@@ -57,7 +57,7 @@ Never commit changes directly to files inside a submodule from the root repo. Al
 - Interest management: formalized via ReBAC + Hilbert bounds; consumed by zone-console and zone servers
 - BVH structure: Lean proof of O(1) query time; C++ implementation in godot-mmog module
 
-Location: `/Users/ernest.lee/Desktop/multiplayer-fabric/multiplayer-fabric-predictive-bvh`
+Location: `multiplayer-fabric-predictive-bvh/` (submodule in this repo)
 
 ## Critical cross-submodule relationships
 
@@ -143,6 +143,48 @@ branch).
 - Choosing between two architectural approaches
 
 **Reference:** `references.bib` → `zhang2025verbalized`
+
+## multiplayer-fabric-artifacts-mmog
+
+An Elixir HTN-planning bot for the ArtifactsMMO game. It calls the game API via `Req`, builds a Taskweft domain JSON from live character state, plans one episode, and executes the resulting action sequence.
+
+### Running the bot
+
+```sh
+cd multiplayer-fabric-artifacts-mmog
+
+# List available goals
+mix artifacts_mmog.goals
+
+# Run a goal loop (Ctrl-C to stop)
+ARTIFACTS_MMOG_KEY=<token> mix artifacts_mmog.run <CharName> <goal>
+
+# Run a fixed number of iterations
+ARTIFACTS_MMOG_KEY=<token> mix artifacts_mmog.run <CharName> fight_chickens 10
+```
+
+### Available goals
+
+| Goal | Action |
+|---|---|
+| `farm_copper` / `farm_iron` / `farm_coal` | Gather from ore nodes |
+| `farm_ash` / `farm_birch` / `farm_spruce` / `farm_sunflowers` | Gather from resource nodes |
+| `fight_chickens` / `fight_pigs` / `fight_goblins` / `fight_wolverines` | Fight monsters |
+| `fish_gudgeon` | Fish at gudgeon spot |
+| `task_cycle` | Accept or complete the active task |
+| `rest_at_bank` | Go to bank and rest to full HP |
+
+### Formatting
+
+A `.formatter.exs` is present. Always run `mix format` before committing and ensure `mix format --check-formatted` passes (the CI gate checks this).
+
+### adventurer.jsonld — baseline persona plan
+
+`priv/plans/personas/adventurer.jsonld` is a standalone JSON-LD domain that mirrors the actions and methods produced by `ArtifactsMmog.Domain.build/2`. When `domain.ex` changes, this file must be kept in sync:
+
+- **Action op syntax** must match: `domain.ex` emits `"op": "add"` / `"op": "get"` — not the old `"type": "math/add"` / `"type": "pointer/get"`.
+- **Method set** must be complete: every method in `domain.ex` (`go_to_bank`, `ensure_rested`, `bank_if_full`, `farm_resources`, `fight_monsters`, `rest_at_bank`, `task_cycle`) must appear in `adventurer.jsonld`.
+- **Zone enum and IDs** must match the `@zones` list order in `domain.ex` (bank=0 … task_master=13).
 
 ## Per-submodule test commands
 
