@@ -4,9 +4,6 @@
 [submodule "multiplayer-fabric-deploy"]
 	path = multiplayer-fabric-deploy
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-deploy.git
-[submodule "multiplayer-fabric-desync"]
-	path = multiplayer-fabric-desync
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-desync.git
 [submodule "multiplayer-fabric-godot"]
 	path = multiplayer-fabric-godot
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
