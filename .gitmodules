@@ -53,3 +53,6 @@
 [submodule "multiplayer-fabric-baker"]
 	path = multiplayer-fabric-baker
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-baker.git
+[submodule "multiplayer-fabric-llm"]
+	path = multiplayer-fabric-llm
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-llm.git
