@@ -78,6 +78,8 @@ Update multiplayer_fabric_mmog to 20 Hz default simulation rate
 - Escript binaries must run on machines with no Elixir installed. Verify with `mix escript.build` on a clean environment before releasing.
 - TUI state is pure. Ratatui rendering functions take a model and return a new model; they must not perform I/O. Side effects run in `Task` calls that send messages back to the event loop.
 - Migrations are forward-only. Once merged to main, never alter a migration. Fixes require a new migration. Every migration must include a `down/0` that reverts it cleanly.
+- CockroachDB repos (`aria-storage`, `multiplayer-fabric-zone-backend`) must set `migration_lock: false` in the Repo config. The `DATABASE_URL` environment variable is the canonical connection source; never hardcode hostnames or credentials. TLS cert paths come from `CRDB_CA_CERT`, `CRDB_CLIENT_CERT`, `CRDB_CLIENT_KEY`.
+- NIF boundaries (`multiplayer-fabric-llm`) must schedule all blocking C calls on dirty schedulers (`ERL_NIF_DIRTY_JOB_CPU_BOUND`). Token streaming uses `enif_send` from the dirty scheduler thread — never block the regular scheduler. Resource destructors must be idempotent (null-check before freeing).
 
 ### Go
 
@@ -102,6 +104,7 @@ Update multiplayer_fabric_mmog to 20 Hz default simulation rate
 - Use `std::array`, `std::span`, or a bump allocator in inner loops. No dynamic allocation in hot paths.
 - All SIMD optimizations must be guarded by a compile-time feature flag with a scalar reference implementation tested independently.
 - Never hand-edit `predictive_bvh.h` or `predictive_bvh.rs` — regenerate with `lake exe bvh-codegen`.
+- `multiplayer-fabric-llm` Makefile mirrors the GPU backend matrix from `turboquant-godot/modules/llm/SCsub` exactly. When turboquant-godot updates its SCsub source lists or backend conditionals, update the Makefile to match. Metal embed generation runs via `mix gen_metal_embed`, not Python.
 
 ### Lean 4
 
@@ -176,6 +179,15 @@ Never hand-edit `predictive_bvh.h` or `predictive_bvh.rs`.
 ---
 
 ## Distribution
+
+### casync / desync asset distribution (aria-storage)
+
+Game assets are distributed as casync chunk stores. The canonical chunk store for V-Sekai game builds is `https://raw.githubusercontent.com/V-Sekai/casync-v-sekai-game/main/store`. Index files (`.caibx` / `.caidx`) live alongside.
+
+- Chunks are content-addressed (SHA-512/256). A chunk never changes after upload — only new chunks are added for new content.
+- The local chunk cache lives at `~/.cache/casync/chunks` (XDG on Linux, `~/Library/Caches/casync/chunks` on macOS, `%LOCALAPPDATA%\casync\chunks` on Windows) and is shared between `aria-storage`, `desync`, and `casync`. Do not change this path without updating all three.
+- `mix aria_storage.fetch --index <url> --store <url>` reassembles an asset. Add `--cache <path>` to override the default cache location.
+- Chunk store layout: `{store}/{hex[0:4]}/{hex}.cacnk`. Flat layouts are not interoperable.
 
 ### Homebrew (macOS)
 

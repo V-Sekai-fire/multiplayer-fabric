@@ -190,11 +190,12 @@ A `.formatter.exs` is present. Always run `mix format` before committing and ens
 
 | Submodule | Test command | Framework |
 |-----------|-------------|-----------|
+| `aria-storage` | `mix test` | ExUnit + PropCheck |
+| `multiplayer-fabric-artifacts-mmog` | `mix test` | ExUnit |
+| `multiplayer-fabric-deploy` | `mix test` | ExUnit |
+| `multiplayer-fabric-llm` | `mix compile && mix test` | ExUnit (NIF must build first) |
 | `multiplayer-fabric-taskweft` | `mix test --include property` | ExUnit + PropCheck |
 | `multiplayer-fabric-zone-backend` | `mix test` | ExUnit |
 | `multiplayer-fabric-zone-console` | `mix test` | ExUnit + PropCheck |
-| `multiplayer-fabric-artifacts-mmog` | `mix test` | ExUnit |
-| `multiplayer-fabric-deploy` | `mix test` | ExUnit |
-| `multiplayer-fabric-desync` | `go test ./...` | Go testing |
 | `multiplayer-fabric-sandbox` | `ctest --test-dir build` | CMake / CTest + ASAN |
-| Godot submodules | `godot --headless --quit` | Godot test scenes |
+| Godot submodules | `./bin/godot.macos.editor.dev.arm64 --headless --test` | doctest |
