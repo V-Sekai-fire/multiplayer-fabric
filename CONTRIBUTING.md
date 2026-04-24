@@ -78,7 +78,7 @@ Update multiplayer_fabric_mmog to 20 Hz default simulation rate
 - Escript binaries must run on machines with no Elixir installed. Verify with `mix escript.build` on a clean environment before releasing.
 - TUI state is pure. Ratatui rendering functions take a model and return a new model; they must not perform I/O. Side effects run in `Task` calls that send messages back to the event loop.
 - Migrations are forward-only. Once merged to main, never alter a migration. Fixes require a new migration. Every migration must include a `down/0` that reverts it cleanly.
-- CockroachDB repos (`aria-storage`, `multiplayer-fabric-zone-backend`) must set `migration_lock: false` in the Repo config. The `DATABASE_URL` environment variable is the canonical connection source; never hardcode hostnames or credentials. TLS cert paths come from `CRDB_CA_CERT`, `CRDB_CLIENT_CERT`, `CRDB_CLIENT_KEY`.
+- `multiplayer-fabric-zone-backend` uses CockroachDB via `Ecto.Adapters.Postgres`. Its Repo must set `migration_lock: false`. The `DATABASE_URL` environment variable is the canonical connection source; never hardcode hostnames or credentials. TLS cert paths come from `CRDB_CA_CERT`, `CRDB_CLIENT_CERT`, `CRDB_CLIENT_KEY`. `aria-storage` has no database — it is a pure chunk-storage library backed by the filesystem and S3.
 - NIF boundaries (`multiplayer-fabric-llm`) must schedule all blocking C calls on dirty schedulers (`ERL_NIF_DIRTY_JOB_CPU_BOUND`). Token streaming uses `enif_send` from the dirty scheduler thread — never block the regular scheduler. Resource destructors must be idempotent (null-check before freeing).
 
 ### Go
