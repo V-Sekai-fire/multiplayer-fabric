@@ -56,3 +56,6 @@
 [submodule "multiplayer-fabric-llm"]
 	path = multiplayer-fabric-llm
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-llm.git
+[submodule "multiplayer-fabric-casync-seed"]
+	path = multiplayer-fabric-casync-seed
+	url = https://github.com/V-Sekai/multiplayer-fabric-casync-seed.git
