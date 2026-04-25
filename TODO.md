@@ -14,7 +14,7 @@ visible to a second player simultaneously, moving under its species domain plan.
 - [ ] Verify WebTransport clients reach UDP 443 (`ZONE_HOST=zone-700a.chibifire.com`)
 - [ ] Interactive operator camera test: Q/E snap, scroll zoom, WASD pan, F follow, Tab toggle
 - [ ] Operator overlay: load bars + dot clustering (20260425-operator-overlay.md)
-- [ ] Three.js observer Stage 1: parseInterest() + WebTransport + WebGPU scene
+- [ ] Three.js observer Stage 1 → moved to SOMEDAY.md
 
 ## 3. Headless test matrix (local Docker first)
 
@@ -22,8 +22,7 @@ Gate: local Docker → CI headless → VR hardware (20260425-headless-test-matri
 
 - [ ] `headless_log_observer.gd` — add `--dump-json=<path>` flag
 - [ ] Phase 1 GO: Godot observer connects, entity count > 0
-- [ ] Phase 1 TO: Three.js observer, `window.__entities.length > 0`
-- [ ] Phase 2 GO+TO: same entity IDs from both clients
+- [ ] Phase 2 GO+TO: same entity IDs from both clients (needs TO from SOMEDAY.md first)
 
 ## 4. CI/CD (locks in what works locally)
 
