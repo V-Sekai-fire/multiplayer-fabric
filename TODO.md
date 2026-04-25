@@ -2,8 +2,25 @@
 
 Strategy: get it working locally, then CI/CD keeps it from breaking.
 
-- [ ] Phase 1 GO — `just zone-server-local` then `just go-test`; Elixir zone server compiles, cert generated, observer not yet verified against it
-- [ ] Merge zone-backend and zone-console generate-secrets PRs — blocked on required CI: https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend/pull/1 and https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console/pull/1
-- [ ] Wire `headless_tests.yml` — zone-fabric container needs CockroachDB; Godot binary in CI needs custom modules
+## Blocking (must do first)
+
+- [ ] **Phase 1 GO** — run `just zone-server-local` then `just go-test`; Elixir zone server compiles and cert symlinks exist but connection not yet verified
+- [ ] **GODOT_CPP_BRANCH: 4.5** in `linux_builds.yml` — engine is 4.7.dev; godot-cpp branch mismatch causes every feat branch CI to fail at `Compilation (godot-cpp)`
+
+## Blocked PRs (waiting on CI green)
+
+- [ ] zone-backend generate-secrets: https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend/pull/1
+- [ ] zone-console generate-secrets: https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console/pull/1
+
+## Cleanup
+
+- [ ] `multiplayer-fabric-abyssal/sandbox/` — duplicate of `multiplayer-fabric-elf-programs`; remove and add elf-programs as submodule instead
+- [ ] Submodule pointers stale: `multiplayer-fabric-hosting` and `multiplayer-fabric-zone-server` (run `/sync-submodule-pointers`)
+- [ ] Zone-server cert expires in 14 days — `generate-secrets.sh` must be re-run; add cron reminder
+
+## CI
+
+- [ ] Wire `headless_tests.yml` — Docker zone-fabric container does not bind UDP 7443 (GDScript project fails to initialize); blocked until zone-fabric image is rebuilt with working zone server
+- [ ] `elixir update_godot_v_sekai.exs` — reassemble multiplayer-fabric once CI is green
 
 <!-- Completed items in CHANGELOG.md — deferred items in SOMEDAY.md -->
