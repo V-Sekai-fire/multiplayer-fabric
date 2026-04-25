@@ -82,10 +82,9 @@ Test to add: `[WebTransportPeer] Python aioquic client echoes datagram` in
 
 ## Zone backend — API versioning
 
-- [ ] Add `/api/v1` prefix routing inside Phoenix (currently Caddy strips it before
-      forwarding to uro; internal uro routes are unversioned `/shards`, `/storage`,
-      etc.). Moving prefix handling into Phoenix/Plug would let uro be tested directly
-      without a Caddy intermediary and would enable versioned deprecation paths.
+- [x] Move `/api/v1` prefix into Phoenix router — all routes now under
+      `scope "/api/v1"` in `router.ex`; Caddy no longer strips the prefix;
+      `uro_client.ex` updated; 6/6 QA green on production.
 
 ## Zone backend / cluster
 
