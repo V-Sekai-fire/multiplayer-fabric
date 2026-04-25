@@ -1,74 +1,46 @@
 # TODO
 
-## CI — multiplayer-fabric-godot (assembled branch)
+## 1. Unblock CI (do first)
 
-Run 24934241572 in progress — static checks ✓, all builds running.
-Two fixes pushed today:
-- `6feefaf0b9` — remove `SESSION_H3_SETTINGS` from picoquic backend (missed in audit)
-- `99024b02ab` — spelling modelled → modeled (static checks)
+Run 24934241572 in progress — two fixes pushed, static checks ✓.
 
-- [ ] Confirm run 24934241572 passes all platforms green
-- [ ] If any new failures: triage and fix before further feature work
+- [ ] Confirm run 24934241572 green across all platforms
+- [ ] Triage and fix any new failures before further feature work
 
-Known feature gaps in http3 (not blocking CI):
-- `quic_client.h:157` — poll() stub, picoquic event loop not driven
-- `quic_server.h:51` — listen() stub, no UDP bind
-- `http3_client.cpp:82` — POST/PUT/DELETE not implemented
-- `quic_web_backend.cpp:127` — bidi streams not implemented in web backend
+## 2. Security
 
-## Demo — Jellyfish Game (Infinite Aquarium)
+- [ ] Rotate Cloudflare Turnstile keys — plaintext in `multiplayer-fabric-hosting/.env`
 
-**Pass condition** (20260425-jellyfish-pass-condition.md): jellyfish appears in VR,
+## 3. Demo — Jellyfish Game pass condition
+
+Pass condition (20260425-jellyfish-pass-condition.md): jellyfish appears in VR,
 visible to a second player simultaneously, moving under its species domain plan.
 
-**Client strategy**: Godot native PCVR + Three.js WebGPU (no wasm export).
-See: 20260425-threejs-observer.md, 20260425-threejs-player.md.
+- [ ] Verify WebTransport clients reach UDP 443 from public internet
+      (`ZONE_HOST=zone-700a.chibifire.com`)
+- [ ] Interactive operator camera test: Q/E snap, scroll zoom, WASD pan, F follow, Tab toggle
+- [ ] Operator overlay: load bars + dot clustering (20260425-operator-overlay.md)
+- [ ] Three.js observer Stage 1: parseInterest() + WebTransport + WebGPU scene
 
-### Operator camera (observer.tscn)
+## 4. Headless test matrix
 
-- [ ] Interactive editor test: Q/E snap, scroll zoom, WASD pan, F follow, Tab toggle
-- [ ] Operator overlay CanvasLayer: load bars + dot clustering (20260425-operator-overlay.md)
-
-### Three.js WebGPU observer (Stage 1)
-
-- [ ] parseInterest() TypeScript — 100-byte CH_INTEREST wire format
-- [ ] WebTransport connection to zone server (browser API)
-- [ ] Three.js WebGPU scene — OrthographicCamera at twist/swing SWING_ELEVATION
-- [ ] Operator overlay canvas (load bars, dot clustering)
-
-### Headless test matrix (20260425-headless-test-matrix.md)
-
-Gate: local Docker → CI headless → VR hardware.
+Gate: local Docker → CI headless → VR hardware (20260425-headless-test-matrix.md).
 
 - [ ] `headless_log_observer.gd` — add `--dump-json=<path>` flag
 - [ ] Phase 1 GO: Godot observer connects, entity count > 0
 - [ ] Phase 1 TO: Three.js observer, `window.__entities.length > 0`
 - [ ] Phase 2 GO+TO: same entity IDs from both clients
+- [ ] Add `headless_tests.yml` to multiplayer-fabric-godot and wire into `runner.yml`
+- [ ] Add 5 branch protection checks (GO, TO, GP, TP, GO+TO)
 
-### Build pipeline (20260425-build-cache-test-pipeline.md)
+## 5. taskweft
 
-- [ ] Add `headless_tests.yml` workflow to multiplayer-fabric-godot
-- [ ] Wire as 4th stage in `runner.yml` after `docker-images`
-- [ ] Add 5 branch protection status checks (GO, TO, GP, TP, GO+TO)
+- [ ] Run PropCheck full suite (NUMTESTS=100) against production CockroachDB
 
-## taskweft — PropCheck tests
+## 6. Branch maintenance
 
-All 67 property tests green (confirmed 2026-04-25, NUMTESTS=5).
-Fixes landed: query_all nil-rows, module-level pool, cert path, Postgrex.rollback.
-
-- [ ] Run full suite (NUMTESTS=100) against production CockroachDB to confirm
-
-## Zone backend / cluster
-
-- [ ] Verify WebTransport clients reach UDP 443 from public internet
-      (`ZONE_HOST=zone-700a.chibifire.com` in `.env`)
-- [ ] Rotate Cloudflare Turnstile keys
-      (`multiplayer-fabric-hosting/.env` has plaintext `TURNSTILE_SECRET_KEY`)
-
-## Branch maintenance
-
-- [ ] Archive `feat/multiplayer-fabric` once assembled branch is stable
-- [ ] `multiplayer-fabric-merge`: add dry-run CI job (`git-assembler --dry-run`)
 - [ ] Run `elixir update_godot_v_sekai.exs` once all branch CI green
+- [ ] `multiplayer-fabric-merge`: add dry-run CI job (`git-assembler --dry-run`)
+- [ ] Archive `feat/multiplayer-fabric` once assembled branch is stable
 
-<!-- Completed items moved to CHANGELOG.md -->
+<!-- Completed items in CHANGELOG.md -->
