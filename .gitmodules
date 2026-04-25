@@ -1,9 +1,6 @@
 [submodule "multiplayer-fabric-artifacts-mmog"]
 	path = multiplayer-fabric-artifacts-mmog
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-artifacts-mmog.git
-[submodule "multiplayer-fabric-deploy"]
-	path = multiplayer-fabric-deploy
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-deploy.git
 [submodule "multiplayer-fabric-godot"]
 	path = multiplayer-fabric-godot
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
