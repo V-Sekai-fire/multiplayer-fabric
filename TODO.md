@@ -44,11 +44,9 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 **Remaining:**
 - [x] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
 - [x] Serve web export with COOP/COEP and load in Playwright — confirm threaded wasm64 build initialises (`godot_web_init.spec.ts` PASS 1.1 s)
-- [ ] Fix `transport_peer.spec.ts` shape mismatch: `data.zones` → `data.shards`
-- [ ] Fix zone registration test — `POST /api/v1/shards` returning non-2xx on live backend
-- [ ] Wire `/socket/websocket` through Next.js/Cloudflare proxy to Phoenix backend —
-      `endpoint.ex` has `socket "/socket"` but the proxy returns 404; add a
-      Next.js `rewrites` rule or Cloudflare Worker to forward the path
+- [x] Fix `transport_peer.spec.ts` shape mismatch: `data.zones` → `data.shards`
+- [x] Fix zone registration test — `last_put_at` on create + `created_at` fix + PubSub rescue
+- [x] Wire `/socket/websocket` — added `handle /socket/*` in Caddyfile; 400 not 404
 - [x] Write end-to-end Playwright test: `godot_wt_e2e.spec.ts` PASS 3.3 s —
       wasm32 web export loads, GDScript `WebTransportPeer` connects to echo server,
       sends datagram, receives echo (4 C++ bugs fixed to get here)
