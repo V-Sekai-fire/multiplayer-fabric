@@ -59,3 +59,6 @@
 [submodule "multiplayer-fabric-world"]
 	path = multiplayer-fabric-world
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-world.git
+[submodule "docker-multiplayer-fabric"]
+	path = docker-multiplayer-fabric
+	url = https://github.com/V-Sekai-fire/docker-multiplayer-fabric.git
