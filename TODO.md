@@ -21,6 +21,23 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 - [ ] `feat/module-multiplayer-fabric-mmog` — static checks + build
 - [ ] `feat/multiplayer-fabric` (assembled) — full CI matrix
 
+## Operator camera (observer.tscn)
+
+`operator_camera.gd` is written and wired into `observer.tscn`.
+Tests needed before further work:
+
+- [ ] Run `observer.tscn` in the Godot editor and confirm Camera3D renders orthographic
+- [ ] Q/E rotate: twist snaps to 0.0 / 0.25 / 0.5 / 0.75 (cardinal views)
+- [ ] Scroll zoom: spring_length and camera.size both change, zoom stays in [10, 60]
+- [ ] WASD pan: CameraRig moves; pan speed scales with zoom
+- [ ] F key: enters Follow mode on nearest entity; CameraRig lerps toward it
+- [ ] Escape: exits Follow mode, returns to Survey
+- [ ] Tab: toggles orthographic ↔ perspective projection
+- [ ] Remap input actions in `project.godot`:
+      - WASD pan → `cam_pan_left/right/fwd/back` (replace ui_* placeholders)
+      - F → `cam_follow` (replace `ui_filedialog_show_hidden`)
+- [ ] Add operator overlay CanvasLayer (load bars + dot clustering) per `20260425-operator-overlay.md`
+
 ## Web client PoC
 
 **Decision**: web client (not native) for the Infinite Aquarium / creator market.
