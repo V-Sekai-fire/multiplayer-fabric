@@ -49,9 +49,9 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 - [ ] Wire `/socket/websocket` through Next.js/Cloudflare proxy to Phoenix backend —
       `endpoint.ex` has `socket "/socket"` but the proxy returns 404; add a
       Next.js `rewrites` rule or Cloudflare Worker to forward the path
-- [ ] Write end-to-end Playwright test: web export loads → `WebTransportPeer` connects to
-      live zone server → datagram round-trip confirmed via
-      `page.evaluate(() => GodotWebTransport._sessions)`
+- [x] Write end-to-end Playwright test: `godot_wt_e2e.spec.ts` PASS 3.3 s —
+      wasm32 web export loads, GDScript `WebTransportPeer` connects to echo server,
+      sends datagram, receives echo (4 C++ bugs fixed to get here)
 
 ## WebTransport interop test
 
