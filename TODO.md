@@ -45,6 +45,16 @@ Test to add: `[WebTransportPeer] Python aioquic client echoes datagram` in
       `git-assembler --dry-run` on every push to `main`, so assembly regressions
       are caught automatically
 
+## Web client PoC
+
+- [ ] Wire `server_send_datagram_func` so Godot echoes datagrams back to browser clients — see `test_web_transport_peer.h` "h3-framed WT datagram path" follow-up and `web_transport_peer.h:91`
+- [ ] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
+- [ ] Serve with COOP/COEP headers and load in Playwright — confirm threaded `wasm64` build loads
+- [ ] Fix Playwright spec shape mismatch: `data.zones` → `data.shards` in `transport_peer.spec.ts`
+- [ ] Fix zone registration test — POST `/api/v1/shards` returning non-2xx against live backend
+- [ ] Verify `/ws` WebSocket route reachable at `hub-700a.chibifire.com`
+- [ ] Write Playwright test: browser opens web export → `WebTransportPeer` connects to live zone server → datagram round-trip confirmed via `page.evaluate(() => GodotWebTransport._sessions)`
+
 ## Zone backend / cluster
 
 - [ ] `ZONE_HOST` is set to `zone-700a.chibifire.com` in `.env` — verify
