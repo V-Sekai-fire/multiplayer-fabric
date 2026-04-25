@@ -80,6 +80,13 @@ Test to add: `[WebTransportPeer] Python aioquic client echoes datagram` in
       `git-assembler --dry-run` on every push to `main`, so assembly regressions
       are caught automatically
 
+## Zone backend — API versioning
+
+- [ ] Add `/api/v1` prefix routing inside Phoenix (currently Caddy strips it before
+      forwarding to uro; internal uro routes are unversioned `/shards`, `/storage`,
+      etc.). Moving prefix handling into Phoenix/Plug would let uro be tested directly
+      without a Caddy intermediary and would enable versioned deprecation paths.
+
 ## Zone backend / cluster
 
 - [ ] `ZONE_HOST` is set to `zone-700a.chibifire.com` in `.env` — verify
