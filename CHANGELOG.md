@@ -6,6 +6,55 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-25
+
+### Added
+
+- `headless_log_observer.gd` — corrected default port to UDP 7443; added
+  `--host`, `--port`, `--dump-json`, `--frames` CLI flags. Exit 0 on entities
+  received, exit 1 on timeout.
+- `fabric_client.gd` — `send_player_input(cmd, pos, extra)` generic CH_PLAYER
+  write path. Default port corrected to 7443.
+- `observer.tscn` — `XROrigin3D` + `XRCamera3D` + left/right `XRController3D`
+  added; port corrected to 7443.
+- `fabric_player_xr.gd` — OpenXR initialisation with silent desktop fallback.
+- `test_operator_camera.gd` — headless quaternion unit tests (4/4 pass):
+  downward look, 90° twist, swing elevation constant, equivalence to old Euler
+  hierarchy.
+- `headless_go.spec.ts` — Playwright Phase 1 GO spec; spawns `godot --headless`
+  observer and asserts `entities.length > 0` from `--dump-json` output.
+- `headless_tests.yml` — GitHub Actions workflow scaffolding for GO branch
+  protection check (requires full Docker Compose stack to pass).
+- ADRs: Godot native headless observer (`20260425-godot-observer.md`), Godot
+  native PCVR player (`20260425-godot-player.md`). Supersede Three.js ADRs.
+- Lean proofs (`multiplayer-fabric-taskweft/lean/`): `ZoneProtocol` (port
+  assignment, 100-byte packet layout), `ZoneObserver` (exit semantics, step
+  monotonicity), `ZonePlayer` (CH_PLAYER cmd distinctness, camera swing
+  invariant across all operator inputs).
+
+### Changed
+
+- `operator_camera.gd` — swing-twist orientation now built as a single
+  `Quaternion` (`twist_q * swing_q`) on `CameraPivot` instead of Euler angles
+  split across pivot and arm. `SpringArm3D` carries no rotation.
+- Client strategy updated: Three.js ADRs superseded by Godot native observer
+  and player. Three.js browser client moved to SOMEDAY.
+- `runner.yml` — `always()` added to `docker-images` and `headless-tests` so
+  sibling job failures (android, ios, etc.) do not skip them.
+- `gitassembly` — checkpointed `multiplayer-fabric` stage to start from remote
+  HEAD; reassembled and pushed via `update_godot_v_sekai.exs`.
+
+### Fixed
+
+- `operator_camera.gd` — `delta` parameter bug in `_apply_swing_twist`
+  (was using `get_process_delta_time()` instead of passed `delta`).
+- `multiplayer-fabric-godot` local branches — tracking corrected from
+  `origin/master` to their own `origin/feat/*` remotes.
+- `multiplayer-fabric-base` local — reset to `origin/multiplayer-fabric-base`
+  (local was stale reassembly before `scu_build=yes` fixes were applied).
+- Stale stashes dropped from `multiplayer-fabric-godot` (libriscv Win32 files
+  already committed; openvr mode-change noise; empty archived-branch stash).
+
 ### Security
 
 - Rotated Cloudflare Turnstile keys (were plaintext in .env)
