@@ -6,8 +6,8 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 - [x] `headless_log_observer.gd` — correct port to 7443, add `--dump-json=<path>` flag
 - [x] Godot observer and player ADRs — supersede Three.js ADRs
 
-- [x] Phase 1 GO — run `headless_log_observer.gd` against zone server (`127.0.0.1:7443`), assert `entities > 0`, write Playwright spec
+- [ ] Phase 1 GO — run `headless_log_observer.gd` against zone server locally (needs full Docker Compose stack + custom Godot binary)
 - [x] Godot player — GDScript CH_PLAYER write path (`send_player_input`), OpenXR presence in `observer.tscn`
-- [x] Wire `headless_tests.yml` — GO branch protection check in `multiplayer-fabric-godot`
+- [ ] Wire `headless_tests.yml` — currently broken: zone-fabric needs CockroachDB, Godot binary needs custom modules; headless-tests skipped on PRs anyway
 
 <!-- Completed items in CHANGELOG.md — deferred items in SOMEDAY.md -->
