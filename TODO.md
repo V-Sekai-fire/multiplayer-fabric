@@ -11,6 +11,7 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 
 - [ ] `multiplayer-fabric-abyssal/sandbox/` — duplicate of `multiplayer-fabric-elf-programs`; remove and add elf-programs as submodule instead
 - [ ] Zone-server cert expires in 14 days — `generate-secrets.sh` must be re-run; add cron reminder
+- [ ] Vendored `thirdparty/predictive_bvh/` snapshots in `multiplayer-fabric-godot/` (632 K) and `multiplayer-fabric-build/godot/` (582 M) are out of sync with the canonical `multiplayer-fabric-predictive-bvh` repo (research-tier modules extracted, CONTRIBUTING.md / library-root structure changed). Refresh or convert to submodules
 
 ## CI
 
