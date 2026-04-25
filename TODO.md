@@ -39,15 +39,21 @@ Tests needed before further work:
       - F → `cam_follow` (replace `ui_filedialog_show_hidden`)
 - [ ] Add operator overlay CanvasLayer (load bars + dot clustering) per `20260425-operator-overlay.md`
 
-## Web client PoC
+## Client strategy (updated)
 
-**Decision**: web client (not native) for the Infinite Aquarium / creator market.
-- `feat/module-http3` provides `WebTransportPeer` for both native (picoquic) and
-  web export (browser `new WebTransport()` via `quic_web_glue.js`) — transport parity.
-- Zone server stays native; Playwright covers client-side testing.
-- Service worker injects COOP/COEP headers; `gescons` now builds `threads=yes arch=wasm64`.
-- Market data: web removes install barrier (12% → 60% engagement); creator marketplaces
-  (booth.pm, Sketchfab, itch.io) are all web-native.
+**Decision**: two clients replace the previous Godot wasm web export:
+- Godot native PCVR client — VR presence, jellyfish creation, entity control (xr-grid + OpenXR)
+- Three.js WebGPU client — browser observer, operator overlay, no install (20260425-threejs-webgpu-zone-client.md)
+
+Godot wasm32/wasm64 web export is dropped. COOP/COEP service worker, SharedArrayBuffer
+build flags, and gescons wasm targets are no longer needed for the client path.
+
+- [ ] Implement Three.js WebGPU client with CH_INTEREST parser (parseInterest 100-byte format)
+- [ ] Wire Three.js client WebTransport connection to zone server
+- [ ] Port operator camera twist/swing to Three.js OrthographicCamera (20260425-operator-camera-2-5d.md)
+- [ ] Add operator overlay canvas (load bars, dot clustering) over Three.js scene
+
+## Web client PoC (superseded — kept for history)
 
 **Completed:**
 - [x] `_server_path_callback`: fix `sctx` derivation — prefer `p_path_app_ctx` over
