@@ -2,34 +2,28 @@
 
 Items that are good ideas but not on the critical path.
 
-## Three.js WebGPU Observer (Stage 1 — TO)
+## Three.js WebGPU Observer (browser TO)
 
-Full browser observer without a Godot runtime.
+Full browser observer without a Godot runtime. Superseded for native CI by
+the Godot headless observer; still useful for a zero-install browser view.
 
 - parseInterest() TypeScript — 100-byte CH_INTEREST wire format
 - WebTransport connection to zone server (browser API)
-- Three.js WebGPU scene — OrthographicCamera at twist/swing SWING_ELEVATION
+- Three.js WebGPU scene — OrthographicCamera at SWING_ELEVATION
 - Operator overlay canvas (load bars, dot clustering)
 - Playwright Phase 1 TO test: `window.__entities.length > 0`
 
-Blocked on: time. CRIS +4 but lower urgency than GO which reuses existing Godot tooling.
-See: 20260425-threejs-observer.md, 20260425-headless-test-matrix.md
+See: [20260425-godot-observer.md](manuals/decisions/20260425-godot-observer.md)
 
 ## Operator overlay
 
 Load bars + dot clustering CanvasLayer over observer.tscn.
 See: 20260425-operator-overlay.md
 
-## Headless test matrix — CI wiring
+## Headless test matrix — full CI wiring
 
-- headless_tests.yml workflow in multiplayer-fabric-godot
+- Phase 2 GO+TO cross-check (Godot observer + Three.js observer together)
 - 5 branch protection checks (GO, TO, GP, TP, GO+TO)
-- Phase 2 GO+TO cross-check
-
-## CI/CD
-
-- Confirm run 24934241572 green
-- Wire headless_tests.yml into runner.yml
 - taskweft PropCheck NUMTESTS=100 against production CockroachDB
 
 ## Branch maintenance
