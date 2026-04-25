@@ -2,12 +2,15 @@
 
 ## CI — verify all branches pass
 
-All 13 branches have runs queued as of 2026-04-24. Once results land:
+All 15 branches re-run on 2026-04-25 (multiplayer-fabric only; others cancelled to save quota).
+`feat/godot-cpp-build` local build verified PASS (23 s, warm cache).
+GHA runs were all previously cancelled due to rapid push concurrency — no failures.
 
+- [ ] Re-run all 15 branches once CI queue is clear and verify green
 - [ ] `feat/engine-patches` — static checks + build
 - [ ] `feat/module-sqlite` — static checks + build
 - [ ] `feat/module-http3` — static checks + build
-- [ ] `feat/module-sandbox` — static checks + build (Win32 gitignore fix queued)
+- [ ] `feat/module-sandbox` — static checks + build
 - [ ] `feat/module-keychain` — static checks + build
 - [ ] `feat/module-lasso` — static checks + build
 - [ ] `feat/module-openvr` — static checks + build
@@ -17,6 +20,36 @@ All 13 branches have runs queued as of 2026-04-24. Once results land:
 - [ ] `feat/module-multiplayer-fabric-asset` — static checks + build
 - [ ] `feat/module-multiplayer-fabric-mmog` — static checks + build
 - [ ] `feat/multiplayer-fabric` (assembled) — full CI matrix
+
+## Web client PoC
+
+**Decision**: web client (not native) for the Infinite Aquarium / creator market.
+- `feat/module-http3` provides `WebTransportPeer` for both native (picoquic) and
+  web export (browser `new WebTransport()` via `quic_web_glue.js`) — transport parity.
+- Zone server stays native; Playwright covers client-side testing.
+- Service worker injects COOP/COEP headers; `gescons` now builds `threads=yes arch=wasm64`.
+- Market data: web removes install barrier (12% → 60% engagement); creator marketplaces
+  (booth.pm, Sketchfab, itch.io) are all web-native.
+
+**Completed:**
+- [x] `_server_path_callback`: fix `sctx` derivation — prefer `p_path_app_ctx` over
+      `p_stream_ctx->path_callback_ctx` (proved by Lean `fixed_sctx` theorem)
+- [x] `wt_server_demo.gd`: mirror received packet's `transfer_mode` before `put_packet`
+      (default RELIABLE was routing echo to streams; datagrams need UNRELIABLE)
+- [x] `wt_browser.spec.ts`: Playwright Chromium test — session connects, datagram echoes,
+      PASS in 1.4 s against local `wt_server_demo.gd` echo server
+- [x] `playwright.config.ts`: add chromium project; inline HTTP server for secure context
+- [x] `gescons` alias: add `threads=yes arch=wasm64` to match GHA web build matrix
+
+**Remaining:**
+- [ ] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
+- [ ] Serve web export with COOP/COEP and load in Playwright — confirm threaded wasm64 build initialises
+- [ ] Fix `transport_peer.spec.ts` shape mismatch: `data.zones` → `data.shards`
+- [ ] Fix zone registration test — `POST /api/v1/shards` returning non-2xx on live backend
+- [ ] Verify `/ws` WebSocket route reachable at `hub-700a.chibifire.com`
+- [ ] Write end-to-end Playwright test: web export loads → `WebTransportPeer` connects to
+      live zone server → datagram round-trip confirmed via
+      `page.evaluate(() => GodotWebTransport._sessions)`
 
 ## WebTransport interop test
 
@@ -44,16 +77,6 @@ Test to add: `[WebTransportPeer] Python aioquic client echoes datagram` in
 - [ ] Add dry-run CI job to `multiplayer-fabric-merge` that runs
       `git-assembler --dry-run` on every push to `main`, so assembly regressions
       are caught automatically
-
-## Web client PoC
-
-- [ ] Wire `server_send_datagram_func` so Godot echoes datagrams back to browser clients — see `test_web_transport_peer.h` "h3-framed WT datagram path" follow-up and `web_transport_peer.h:91`
-- [ ] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
-- [ ] Serve with COOP/COEP headers and load in Playwright — confirm threaded `wasm64` build loads
-- [ ] Fix Playwright spec shape mismatch: `data.zones` → `data.shards` in `transport_peer.spec.ts`
-- [ ] Fix zone registration test — POST `/api/v1/shards` returning non-2xx against live backend
-- [ ] Verify `/ws` WebSocket route reachable at `hub-700a.chibifire.com`
-- [ ] Write Playwright test: browser opens web export → `WebTransportPeer` connects to live zone server → datagram round-trip confirmed via `page.evaluate(() => GodotWebTransport._sessions)`
 
 ## Zone backend / cluster
 
