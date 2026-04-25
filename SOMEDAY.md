@@ -14,3 +14,26 @@ Full browser observer without a Godot runtime.
 
 Blocked on: time. CRIS +4 but lower urgency than GO which reuses existing Godot tooling.
 See: 20260425-threejs-observer.md, 20260425-headless-test-matrix.md
+
+## Operator overlay
+
+Load bars + dot clustering CanvasLayer over observer.tscn.
+See: 20260425-operator-overlay.md
+
+## Headless test matrix — CI wiring
+
+- headless_tests.yml workflow in multiplayer-fabric-godot
+- 5 branch protection checks (GO, TO, GP, TP, GO+TO)
+- Phase 2 GO+TO cross-check
+
+## CI/CD
+
+- Confirm run 24934241572 green
+- Wire headless_tests.yml into runner.yml
+- taskweft PropCheck NUMTESTS=100 against production CockroachDB
+
+## Branch maintenance
+
+- elixir update_godot_v_sekai.exs once CI green
+- multiplayer-fabric-merge dry-run CI job
+- Archive feat/multiplayer-fabric
