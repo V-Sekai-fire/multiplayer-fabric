@@ -56,3 +56,6 @@
 [submodule "multiplayer-fabric-merge"]
 	path = multiplayer-fabric-merge
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-merge
+[submodule "multiplayer-fabric-world"]
+	path = multiplayer-fabric-world
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-world.git
