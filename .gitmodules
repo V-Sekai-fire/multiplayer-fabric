@@ -65,9 +65,6 @@
 [submodule "multiplayer-fabric-abyssal"]
 	path = multiplayer-fabric-abyssal
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-abyssal.git
-[submodule "multiplayer-fabric-zone-server"]
-	path = multiplayer-fabric-zone-server
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-server.git
 [submodule "multiplayer-fabric-generate-secrets"]
 	path = multiplayer-fabric-generate-secrets
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-generate-secrets.git
