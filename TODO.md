@@ -4,17 +4,7 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 
 ## Blocking (must do first)
 
-- [ ] **Phase 1 GO** — run `just zone-server-local` then `just go-test`; Elixir zone server compiles and cert symlinks exist but connection not yet verified
-- [ ] **GODOT_CPP_BRANCH: 4.5** in `linux_builds.yml` — engine is 4.7.dev; godot-cpp branch mismatch causes every feat branch CI to fail at `Compilation (godot-cpp)`
+- [ ] **Phase 1 GO** — run `just zone-server-local` then `just go-test` (recipes in `multiplayer-fabric-hosting/justfile:46,50`); Elixir zone server compiles and cert symlinks exist but connection not yet verified
 
-## Cleanup
-
-- [ ] Zone-server cert expires **2026-05-09** — `generate-secrets.sh` must be re-run before then; add cron reminder
-- [ ] Vendored `thirdparty/predictive_bvh/` snapshots in `multiplayer-fabric-godot/` (632 K) and `multiplayer-fabric-build/godot/` (582 M) are out of sync with the canonical `multiplayer-fabric-predictive-bvh` repo (research-tier modules extracted, CONTRIBUTING.md / library-root structure changed). Refresh or convert to submodules
-
-## CI
-
-- [ ] Wire `headless_tests.yml` — ports 7443-7542 are forwarded; Docker zone-fabric Godot process runs but GDScript fails to initialize (no GodotSharp → WebTransport server never starts); use Elixir zone server (`just zone-server-local`) as the CI target instead of the Docker image
-- [ ] `elixir update_godot_v_sekai.exs` — reassemble multiplayer-fabric once CI is green
-
-<!-- Completed items in CHANGELOG.md — deferred items in SOMEDAY.md -->
+<!-- Infra / cleanup / CI items moved to SOMEDAY.md — only "make it work" lives here. -->
+<!-- Completed items in CHANGELOG.md. -->
