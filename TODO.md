@@ -1,5 +1,25 @@
 # TODO
 
+## Defect-0 plan — http3 module
+
+**Root cause of all CI failures** (run 24933681802): `SESSION_H3_SETTINGS`
+removed from the `SessionState` enum in the WebTransport audit but not from
+`quic_picoquic_backend.cpp:589`. Fix pushed in `6feefaf0b9`. Run 24934241572
+is the first clean run — static checks pass, builds in progress.
+
+**Known TODOs (feature gaps, not defects):**
+- `quic_client.h:157` — poll() stub, no picoquic event loop
+- `quic_server.h:51` — listen() stub, no UDP bind
+- `http3_client.cpp:82-83` — POST/PUT/DELETE not implemented
+- `quic_web_backend.cpp:127-128` — bidi streams not implemented in web backend
+
+**Local headless test**: observer.tscn runs clean — no operator_camera errors,
+no SESSION enum errors, no Mutex errors. Only expected: FabricClient can't
+connect (no zone server) and 1 ObjectDB leak on exit.
+
+- [ ] Wait for run 24934241572 to complete green
+- [ ] If any new failures appear, triage per defect below
+
 ## CI — verify all branches pass
 
 All 15 branches re-run on 2026-04-25 (multiplayer-fabric only; others cancelled to save quota).
