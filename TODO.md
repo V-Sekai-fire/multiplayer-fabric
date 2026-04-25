@@ -20,7 +20,7 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 
 ## CI
 
-- [ ] Wire `headless_tests.yml` — Docker zone-fabric container does not bind UDP 7443 (GDScript project fails to initialize); blocked until zone-fabric image is rebuilt with working zone server
+- [ ] Wire `headless_tests.yml` — ports 7443-7542 are forwarded; Docker zone-fabric Godot process runs but GDScript fails to initialize (no GodotSharp → WebTransport server never starts); use Elixir zone server (`just zone-server-local`) as the CI target instead of the Docker image
 - [ ] `elixir update_godot_v_sekai.exs` — reassemble multiplayer-fabric once CI is green
 
 <!-- Completed items in CHANGELOG.md — deferred items in SOMEDAY.md -->
