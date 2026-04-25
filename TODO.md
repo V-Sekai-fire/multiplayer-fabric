@@ -1,28 +1,22 @@
 # TODO
 
-## 1. Unblock CI (do first)
+Strategy: get it working locally, then CI/CD keeps it from breaking.
 
-Run 24934241572 in progress — two fixes pushed, static checks ✓.
-
-- [ ] Confirm run 24934241572 green across all platforms
-- [ ] Triage and fix any new failures before further feature work
-
-## 2. Security
+## 1. Security
 
 - [ ] Rotate Cloudflare Turnstile keys — plaintext in `multiplayer-fabric-hosting/.env`
 
-## 3. Demo — Jellyfish Game pass condition
+## 2. Demo — Jellyfish Game pass condition (local first)
 
 Pass condition (20260425-jellyfish-pass-condition.md): jellyfish appears in VR,
 visible to a second player simultaneously, moving under its species domain plan.
 
-- [ ] Verify WebTransport clients reach UDP 443 from public internet
-      (`ZONE_HOST=zone-700a.chibifire.com`)
+- [ ] Verify WebTransport clients reach UDP 443 (`ZONE_HOST=zone-700a.chibifire.com`)
 - [ ] Interactive operator camera test: Q/E snap, scroll zoom, WASD pan, F follow, Tab toggle
 - [ ] Operator overlay: load bars + dot clustering (20260425-operator-overlay.md)
 - [ ] Three.js observer Stage 1: parseInterest() + WebTransport + WebGPU scene
 
-## 4. Headless test matrix
+## 3. Headless test matrix (local Docker first)
 
 Gate: local Docker → CI headless → VR hardware (20260425-headless-test-matrix.md).
 
@@ -30,7 +24,11 @@ Gate: local Docker → CI headless → VR hardware (20260425-headless-test-matri
 - [ ] Phase 1 GO: Godot observer connects, entity count > 0
 - [ ] Phase 1 TO: Three.js observer, `window.__entities.length > 0`
 - [ ] Phase 2 GO+TO: same entity IDs from both clients
-- [ ] Add `headless_tests.yml` to multiplayer-fabric-godot and wire into `runner.yml`
+
+## 4. CI/CD (locks in what works locally)
+
+- [ ] Confirm run 24934241572 green (SESSION_H3_SETTINGS + spelling fixes)
+- [ ] Add `headless_tests.yml` to multiplayer-fabric-godot, wire into `runner.yml`
 - [ ] Add 5 branch protection checks (GO, TO, GP, TP, GO+TO)
 
 ## 5. taskweft
