@@ -13,6 +13,12 @@ MUST NOT use Conventional Commits (`feat:`, `fix:`, `chore:`, etc.). Write commi
 - `Fix mix.exs missing closing bracket in deps list`
 - `Update zone-console submodule pointer`
 
+## Operating system
+
+Develop on macOS or Linux. **On Windows, use WSL2 (Ubuntu)** — the local
+workflow is bash-first (POSIX shebangs, `/tmp` paths, symlinks, `lsof`,
+UNIX docker socket). cmd / PowerShell are not supported.
+
 ## Working with submodules
 
 ```sh
