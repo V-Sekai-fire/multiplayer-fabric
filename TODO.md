@@ -42,8 +42,8 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 - [x] `gescons` alias: add `threads=yes arch=wasm64` to match GHA web build matrix
 
 **Remaining:**
-- [ ] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
-- [ ] Serve web export with COOP/COEP and load in Playwright — confirm threaded wasm64 build initialises
+- [x] Build web export: `cd multiplayer-fabric-godot && gescons target=template_debug`
+- [x] Serve web export with COOP/COEP and load in Playwright — confirm threaded wasm64 build initialises (`godot_web_init.spec.ts` PASS 1.1 s)
 - [ ] Fix `transport_peer.spec.ts` shape mismatch: `data.zones` → `data.shards`
 - [ ] Fix zone registration test — `POST /api/v1/shards` returning non-2xx on live backend
 - [ ] Verify `/ws` WebSocket route reachable at `hub-700a.chibifire.com`
