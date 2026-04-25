@@ -46,7 +46,9 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 - [x] Serve web export with COOP/COEP and load in Playwright — confirm threaded wasm64 build initialises (`godot_web_init.spec.ts` PASS 1.1 s)
 - [ ] Fix `transport_peer.spec.ts` shape mismatch: `data.zones` → `data.shards`
 - [ ] Fix zone registration test — `POST /api/v1/shards` returning non-2xx on live backend
-- [ ] Verify `/ws` WebSocket route reachable at `hub-700a.chibifire.com`
+- [ ] Wire `/socket/websocket` through Next.js/Cloudflare proxy to Phoenix backend —
+      `endpoint.ex` has `socket "/socket"` but the proxy returns 404; add a
+      Next.js `rewrites` rule or Cloudflare Worker to forward the path
 - [ ] Write end-to-end Playwright test: web export loads → `WebTransportPeer` connects to
       live zone server → datagram round-trip confirmed via
       `page.evaluate(() => GodotWebTransport._sessions)`
