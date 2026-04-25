@@ -10,7 +10,6 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 ## Cleanup
 
 - [ ] `multiplayer-fabric-abyssal/sandbox/` — duplicate of `multiplayer-fabric-elf-programs`; remove and add elf-programs as submodule instead
-- [ ] Submodule pointers stale: `multiplayer-fabric-hosting` and `multiplayer-fabric-zone-server` (run `/sync-submodule-pointers`)
 - [ ] Zone-server cert expires in 14 days — `generate-secrets.sh` must be re-run; add cron reminder
 - [ ] Repair `multiplayer-fabric-predictive-bvh-research` modules — Phase 1c (`sorted_is_ascending_after_build`, `aabbQueryB_agrees_with_aabbQueryN`), Phase 2b' (`rayQueryN` / `convexQueryN` soundness), incremental `tick_agrees_with_build`. All 8 modules currently broken under Lean 4.26; not in production codegen import closure
 
