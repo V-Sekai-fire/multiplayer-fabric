@@ -26,11 +26,6 @@ See: 20260425-threejs-observer.md, 20260425-threejs-player.md.
 
 ### Operator camera (observer.tscn)
 
-- [x] `operator_camera.gd` written — twist/swing [0,1], Survey/Follow modes
-- [x] Input actions added to `project.godot` (Q/E, WASD, F, Tab, scroll)
-- [x] `window.__camera_state` JS export via JavaScriptBridge
-- [x] Playwright Layer 1 (JS simulation): 7/7 pass
-- [x] Headless parse: observer.tscn loads with no script errors
 - [ ] Interactive editor test: Q/E snap, scroll zoom, WASD pan, F follow, Tab toggle
 - [ ] Operator overlay CanvasLayer: load bars + dot clustering (20260425-operator-overlay.md)
 
@@ -76,11 +71,4 @@ Fixes landed: query_all nil-rows, module-level pool, cert path, Postgrex.rollbac
 - [ ] `multiplayer-fabric-merge`: add dry-run CI job (`git-assembler --dry-run`)
 - [ ] Run `elixir update_godot_v_sekai.exs` once all branch CI green
 
-## Web client PoC (superseded — history)
-
-- [x] `wt_browser.spec.ts` PASS 1.4 s
-- [x] `godot_web_init.spec.ts` PASS 1.1 s
-- [x] `godot_wt_e2e.spec.ts` PASS 3.3 s (4 C++ bugs fixed)
-- [x] Zone backend `/api/v1` migration — 6/6 QA green
-- [x] WebTransport audit: datagram reader lock, incoming mutex, dead state, Lean proofs
-- [x] taskweft: query_all nil-rows fix, TLS test helpers, module-level pool, rollback fix
+<!-- Completed items moved to CHANGELOG.md -->
