@@ -62,6 +62,6 @@
 [submodule "docker-multiplayer-fabric"]
 	path = docker-multiplayer-fabric
 	url = https://github.com/V-Sekai-fire/docker-multiplayer-fabric.git
-[submodule "multiplayer-fabric-abyssal-vr"]
-	path = multiplayer-fabric-abyssal-vr
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-abyssal-vr.git
+[submodule "multiplayer-fabric-abyssal"]
+	path = multiplayer-fabric-abyssal
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-abyssal.git
