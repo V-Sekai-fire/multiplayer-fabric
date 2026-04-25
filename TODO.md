@@ -26,6 +26,7 @@ GHA runs were all previously cancelled due to rapid push concurrency — no fail
 `operator_camera.gd` is written and wired into `observer.tscn`.
 Tests needed before further work:
 
+- [x] Headless parse check passes — no script errors in operator_camera.gd
 - [ ] Run `observer.tscn` in the Godot editor and confirm Camera3D renders orthographic
 - [ ] Q/E rotate: twist snaps to 0.0 / 0.25 / 0.5 / 0.75 (cardinal views)
 - [ ] Scroll zoom: spring_length and camera.size both change, zoom stays in [10, 60]
