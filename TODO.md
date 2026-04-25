@@ -4,7 +4,7 @@ Strategy: get it working locally, then CI/CD keeps it from breaking.
 
 ## 1. Security
 
-- [ ] Rotate Cloudflare Turnstile keys — plaintext in `multiplayer-fabric-hosting/.env`
+- [x] Rotate Cloudflare Turnstile keys
 
 ## 2. Demo — Jellyfish Game pass condition (local first)
 
