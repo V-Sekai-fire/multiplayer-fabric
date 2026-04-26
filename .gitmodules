@@ -26,6 +26,7 @@
 [submodule "multiplayer-fabric-predictive-bvh"]
 	path = multiplayer-fabric-predictive-bvh
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh.git
+	branch = main
 [submodule "multiplayer-fabric-skills"]
 	path = multiplayer-fabric-skills
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-skills.git
@@ -53,6 +54,7 @@
 [submodule "multiplayer-fabric-build"]
 	path = multiplayer-fabric-build
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-build.git
+	branch = main
 [submodule "docker-multiplayer-fabric"]
 	path = docker-multiplayer-fabric
 	url = https://github.com/V-Sekai-fire/docker-multiplayer-fabric.git
