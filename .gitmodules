@@ -1,16 +1,9 @@
 [submodule "multiplayer-fabric-artifacts-mmog"]
 	path = multiplayer-fabric-artifacts-mmog
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-artifacts-mmog.git
-[submodule "multiplayer-fabric-godot"]
-	path = multiplayer-fabric-godot
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
-	branch = multiplayer-fabric
 [submodule "multiplayer-fabric-humanoid-project"]
 	path = multiplayer-fabric-humanoid-project
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project.git
-[submodule "multiplayer-fabric-interaction-system"]
-	path = multiplayer-fabric-interaction-system
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system.git
 [submodule "multiplayer-fabric-rx"]
 	path = multiplayer-fabric-rx
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-rx.git
@@ -75,6 +68,3 @@
 [submodule "multiplayer-fabric-meta"]
 	path = multiplayer-fabric-meta
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-meta.git
-[submodule "multiplayer-fabric-interaction-system-project"]
-	path = multiplayer-fabric-interaction-system-project
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system-project.git
