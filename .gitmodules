@@ -58,3 +58,6 @@
 [submodule "multiplayer-fabric-predictive-bvh-research"]
 	path = multiplayer-fabric-predictive-bvh-research
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh-research.git
+[submodule "multiplayer-fabric-godot"]
+	path = multiplayer-fabric-godot
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
