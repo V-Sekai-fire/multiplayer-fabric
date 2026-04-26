@@ -91,20 +91,104 @@ Bots are **not** full Godot processes. Each is ~15 MB. On this M2 Pro (12 cores,
 | OS headroom | 1 core |
 | 16 bot processes | ~240 MB RAM, share remaining 9 cores |
 
+### Scenarios
+
+All four run on the flat mire plane with 16 taskweft bots. Each is a distinct
+HTN domain passed to `tw_bot --scenario <name>`. Each maps to a formal Lean
+construct in `multiplayer-fabric-predictive-bvh`.
+
+#### Concert
+**Lean:** `separatedConcertFits` / `naiveConcertFits` — `Interest/AuthorityInterest.lean`
+
+All 16 bots converge to the same zone area. Local players (authority on this
+zone) fill the authority budget; remote players (authority on a neighbouring
+zone) fill the interest/replica budget. The separation theorem proves the total
+visible count `lo + re ≤ (cap − headroom) + InterestCapacity` exceeds what the
+naive model allows.
+
+Pass: `separatedConcertFits 16 0 1800 400` holds; `concert_coexistence` theorem
+fires; interest-set snapshot for the observer equals full 896 slots.
+
+```
+· · · · · · · · ·
+· · · MMMMMM · ·   ← all mires converging
+· · · MMMMMM · ·
+· · · · · · · · ·
+```
+
+#### Chokepoint
+**Lean:** C7/G221 `currentFunnelPeakVUmTick` = 60 m/s — `Spatial/ScaleContradictions.lean`
+
+Bots rush through a narrow corridor simultaneously, reaching speeds at or above
+`vMaxPhysical` (10 m/s) due to crowd pressure. The theorem
+`c7_current_funnel_exceeds_cap : vMaxPhysical < currentFunnelPeakVUmTick`
+describes the adversarial case. The zone server must register the funnel segment
+with its own per-segment velocity rather than the global cap; mitigation is the
+C7 theorem `c7_funnel_mitigation_ge`.
+
+Pass: no entity exits the BVH ghost bound; zone server logs the funnel segment
+velocity override; no SCRIPT ERROR.
+
+```
+· · · · | · · · ·
+M M M M → · · · ·   ← group A
+· · · · ← M M M M   ← group B
+· · · · | · · · ·
+```
+
+#### Convoy
+**Lean:** `wpPeriodMin` / `migration_completes_before_phase_flip` — `Protocol/WaypointBound.lean`
+
+A mover entity leads a column of cabin entities (bots) on a periodic route that
+crosses the zone boundary and returns — one full cycle = 2 × `wpPeriodMin`.
+The theorem `migration_completes_before_phase_flip` proves each STAGING
+migration finishes before the phase reversal, preventing hysteresis resets.
+The convoy half-cycle must satisfy `wpPeriodValid(WP_PERIOD) = true`.
+
+Pass: all cabin bots complete ≥ 2 zone crossings; `wpPeriodValid` holds for the
+chosen period; no cabin disappears during STAGING.
+
+```
+· · · · · · · · ·
+· M M M M M M M ·   ← mover + cabins →
+· · · · · · · · ·
+```
+
+#### Ragdoll
+**Lean:** C1/G13 `g13_vTrue` = 15 m/s + C2/G29 `aHalfMinForearm` — `Spatial/ScaleContradictions.lean`
+
+Bots collide head-on, momentarily reaching `g13_vTrue` = 15 m/s (above the
+10 m/s `vMaxPhysical` cap). The C1 mitigation clamps to `vMaxPhysical`; C2
+accounts for forearm half-acceleration `aHalfMinForearm` in ghost bound
+expansion. Tests that the constant-work tick stays stable under rapid velocity
+and acceleration spikes.
+
+Pass: server clamps impulse velocities to `vMaxPhysical` (C1); ghost bound
+expansion uses `aHalfMinForearm` (C2); tick p99 ≤ 2× baseline.
+
+```
+ M→  ←M  M→  ←M
+   ↘ ↙    ↘ ↙
+    ✕       ✕      ← collision impulses
+```
+
 ### Win condition
 
-**16 mires visible in the `zone_console` ASCII map, moving under HTN control,
-at 20 Hz, with 896 entity slots occupied — all in a terminal, no Godot window.**
+**All four scenarios complete with 16 mires visible in `zone_console`, 20 Hz
+tick maintained throughout, and zero entity loss — all in a terminal.**
 
 ### Pass conditions
 
 | Check | Target |
 |---|---|
-| All 16 mires appear on the map | Zone server logs 16 registered players |
+| All 16 mires on the map | Zone server logs 16 registered players in each scenario |
 | Entity slots | 896 occupied (16 × 56); zone never exceeds 1,800 |
-| Zone tick rate | Holds at 20 Hz; `tick=50ms` shown in TUI status bar |
-| Mires move | Each bot completes ≥ 1 HTN plan cycle (move → arrive → replan) |
-| Clean shutdown | `FabricSnapshot` written; positions recoverable on restart |
+| Zone tick rate | Holds at 20 Hz; `tick=50ms` in TUI status bar for all 4 scenarios |
+| Concert | All mires reach centre; interest set = full 896 slots for observer |
+| Chokepoint | STAGING migrations fire and complete; no mire disappears during crossing |
+| Convoy | Tick-time variance ≤ Concert (correlated movement ≤ random scatter cost) |
+| Ragdoll | No tick spike > 2× baseline during collision burst |
+| Clean shutdown | `FabricSnapshot` written after each scenario; positions recoverable |
 
 ### How to run
 
