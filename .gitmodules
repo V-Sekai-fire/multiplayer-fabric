@@ -1,9 +1,6 @@
 [submodule "multiplayer-fabric-humanoid-project"]
 	path = multiplayer-fabric-humanoid-project
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project.git
-[submodule "multiplayer-fabric-rx"]
-	path = multiplayer-fabric-rx
-	url = https://github.com/V-Sekai-fire/multiplayer-fabric-rx.git
 [submodule "multiplayer-fabric-elf-programs"]
 	path = multiplayer-fabric-elf-programs
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-elf-programs.git
