@@ -5,4 +5,5 @@
 tmp/
 .claude/
 *.key
-*.pem
+*.pemartifacts/
+artifacts/
