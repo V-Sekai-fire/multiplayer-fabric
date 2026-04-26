@@ -74,3 +74,6 @@
 [submodule "multiplayer-fabric-monado"]
 	path = multiplayer-fabric-monado
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-monado.git
+[submodule "multiplayer-fabric-meta"]
+	path = multiplayer-fabric-meta
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-meta.git
