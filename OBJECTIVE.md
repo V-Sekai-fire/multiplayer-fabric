@@ -30,19 +30,6 @@ on the plane. The zone server accepts a WebTransport connection from the client.
 | Character steps forward on plane | Basic rigid-body plane collision and input routing functional |
 | Zone server accepts connection | WebTransport (HTTP/3) handshake succeeds between client and `zone-backend` |
 
-## Current blockers
-
-1. **gitassembly must run** — `multiplayer-fabric-merge/update_godot_v_sekai.exs`
-   needs to be executed inside a checkout of `multiplayer-fabric-godot` on `master`
-   to produce the assembled `multiplayer-fabric` branch. The branch is then
-   force-pushed to `V-Sekai-fire/multiplayer-fabric-godot`.
-
-2. **Engine not yet built** — `multiplayer-fabric-build` must compile the
-   assembled engine for the target platform before the headless test can run.
-
-3. **Zone connection untested** — `zone-backend` WebTransport endpoint has not
-   been smoke-tested against the assembled engine's HTTP/3 module.
-
 ## Stack
 
 | Layer | Component | Still Godot? |
@@ -189,48 +176,3 @@ tick maintained throughout, and zero entity loss — all in a terminal.**
 | Convoy | Tick-time variance ≤ Concert (correlated movement ≤ random scatter cost) |
 | Ragdoll | No tick spike > 2× baseline during collision burst |
 | Clean shutdown | `FabricSnapshot` written after each scenario; positions recoverable |
-
-### How to run
-
-```sh
-# 1. Build the taskweft bot
-cd multiplayer-fabric-taskweft/standalone
-cmake -B build && cmake --build build --target tw_bot
-
-# 2. Start zone stack
-cd multiplayer-fabric-zone-backend && mix phx.server &
-ZONE_IDX=0 ZONE_TOTAL=1 godot --headless --path ../multiplayer-fabric-humanoid-project &
-
-# 3. Spawn 16 bots
-for i in $(seq 1 16); do
-  ./build/tw_bot --host localhost --port 4433 --seed $i &
-done
-
-# 4. Watch in zone_console
-cd multiplayer-fabric-zone-console
-./zone_console http://localhost:8888
-# → ASCII map populates with 16 moving M glyphs
-# → status bar: players=16  entities=896  tick=50ms
-```
-
-## Definition of done
-
-```sh
-# 1. Assemble engine
-cd multiplayer-fabric-merge/multiplayer-fabric-godot
-elixir ../update_godot_v_sekai.exs
-
-# 2. Build
-cd multiplayer-fabric-build
-just build-platform-target macos editor arm64 double no
-
-# 3. Smoke test
-godot --path ../multiplayer-fabric-humanoid-project --headless --quit-after 300
-# → exit 0, no SCRIPT ERROR
-# → "Humanoid loaded" in stdout
-# → character steps forward on mire plane
-
-# 4. Zone connection
-mix phx.server &   # zone-backend
-# → WebTransport handshake logged
-```
