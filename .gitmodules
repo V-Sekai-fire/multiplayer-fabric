@@ -75,3 +75,6 @@
 [submodule "multiplayer-fabric-meta"]
 	path = multiplayer-fabric-meta
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-meta.git
+[submodule "multiplayer-fabric-interaction-system-project"]
+	path = multiplayer-fabric-interaction-system-project
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system-project.git
