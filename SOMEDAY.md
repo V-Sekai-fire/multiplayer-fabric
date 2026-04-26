@@ -2,6 +2,22 @@
 
 Items that are good ideas but not on the critical path.
 
+## Quest 3 OpenXR on macOS — minimum smoke test with multiplayer-fabric
+
+Pass condition: Godot scene initialises an OpenXR session via Meta XR Simulator
+on macOS, connects to the zone server, and receives at least one CH_INTEREST
+datagram (entity count > 0).
+
+Steps:
+1. Install Meta XR Simulator on macOS — it registers itself as the active OpenXR runtime
+2. In Godot project: enable OpenXR, confirm `XRServer.find_interface("OpenXR")` returns non-null
+3. Run `observer.tscn` with `FabricMultiplayerPeer` pointed at `127.0.0.1:7443`
+4. Assert `_entity_nodes.size() > 0` in the console — smoke test passes
+
+That is the full minimum bar. Perf, hand tracking, and passthrough are out of scope until the smoke test is green.
+
+See: [20260425-godot-player.md](manuals/decisions/20260425-godot-player.md)
+
 ## Three.js WebGPU Observer (browser TO)
 
 Full browser observer without a Godot runtime. Superseded for native CI by
