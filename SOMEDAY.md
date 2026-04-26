@@ -4,15 +4,15 @@ Items that are good ideas but not on the critical path.
 
 ## Quest 3 OpenXR on macOS — minimum smoke test with multiplayer-fabric
 
-Pass condition: Godot scene initialises an OpenXR session via Meta XR Simulator
-on macOS, connects to the zone server, and receives at least one CH_INTEREST
-datagram (entity count > 0).
+Pass condition: Godot player scene initialises an OpenXR session via Meta XR
+Simulator on macOS, connects to the zone server, and sends one CH_PLAYER
+datagram (server ACKs).
 
 Steps:
 1. Install Meta XR Simulator on macOS — it registers itself as the active OpenXR runtime
 2. In Godot project: enable OpenXR, confirm `XRServer.find_interface("OpenXR")` returns non-null
-3. Run `observer.tscn` with `FabricMultiplayerPeer` pointed at `127.0.0.1:7443`
-4. Assert `_entity_nodes.size() > 0` in the console — smoke test passes
+3. Run `observer.tscn` (with XROrigin3D wired) via `FabricMultiplayerPeer` at `127.0.0.1:7443`
+4. Call `send_player_input()` once — confirm server ACKs in console
 
 That is the full minimum bar. Perf, hand tracking, and passthrough are out of scope until the smoke test is green.
 
