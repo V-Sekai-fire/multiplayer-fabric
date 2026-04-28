@@ -210,3 +210,19 @@ Manifests live in `scoop-multiplayer-fabric/bucket/`. For each version bump:
 4. Commit as `Bump <name> to <version>`.
 
 Every manifest must include `checkver` and `autoupdate` pointed at the GitHub releases API.
+
+---
+
+## Not building
+
+These were explicitly superseded or rejected. Do not reopen without an ADR.
+
+| Feature | Reason |
+|---------|--------|
+| Three.js WebGPU zone client | Superseded by Godot native client |
+| Three.js observer (Stage 1) | Superseded by Godot headless observer |
+| Three.js player (Stage 2) | Superseded by Godot PCVR player |
+| Dual-client Playwright test | Superseded by headless test matrix (GO+GP) |
+| Godot wasm32/wasm64 web export | Dropped |
+| SQL-based feature flagging | Rejected |
+| Nutanix/Harvester HCI evaluation | Deferred |

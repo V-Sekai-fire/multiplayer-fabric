@@ -40,6 +40,38 @@ git commit -m "Sync submodules: taskweft add streaming API"
 ```
 
 Never commit changes directly to files inside a submodule from the root repo. Always `cd` into the submodule first. Each submodule has its own `CONTRIBUTING.md` — read it before making changes.
+## Work Queue Discipline
+
+Primary definition: `multiplayer-fabric-taskweft/priv/plans/domains/work_queue.jsonld`
+Schedule proof: `lean4-predictive-bvh-proofs/WorkQueue.lean` (`workQueue_scheduleValid`)
+
+One Saturday per week, single entity (ifire). Each item advances stub → green → refactor.
+Green phase includes writing the Lean proof for that item. Demo: **2026-08-29**.
+
+```
+ 1. openxr_simulator     May 02 → May 16   XR   critical path
+ 2. vr_interaction       May 23 → Jun 06   XR   critical path
+ 3. pcvr_player          Jun 13 → Jun 27   MMOG critical path
+ 4. zone_manifest        Jul 04 → Jul 18   MMOG demo gate
+ 5. sandbox_rebac        Jul 25 → Aug 08   MMOG demo gate
+ 6. jellyfish_demo       Aug 15 → Aug 29   MMOG ← demo
+ 7. isolated_submodule   Sep 05 → Sep 19   MMOG CI
+ 8. headless_observer    Sep 26 → Oct 10   MMOG CI
+ 9. headless_matrix      Oct 17 → Oct 31   MMOG CI
+10. turboquant_llm       Nov 07 → Nov 21   RPG
+11. artifactsmmog_bot    Nov 28 → Dec 12   RPG
+12. gepa_cycle           Dec 19 → Jan 02   RPG
+13. concert_archetype    Jan 09 → Jan 23   MMOG archetype
+14. ragdoll_archetype    Jan 30 → Feb 13   MMOG archetype
+15. convoy_chokepoint    Feb 20 → Mar 06   MMOG archetype
+16. otel_tracing         Mar 13 → Mar 27   XR   independent
+```
+
+To regenerate the plan: `cd multiplayer-fabric-taskweft && mix run -e '
+domain = File.read!("priv/plans/domains/work_queue.jsonld")
+{:ok, plan} = Taskweft.plan(domain)
+Jason.decode!(plan) |> Enum.each(&IO.inspect/1)
+'`
 
 ## Mathematics and Proof Authority
 
