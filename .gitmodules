@@ -64,3 +64,21 @@
 [submodule "multiplayer-fabric-llm"]
 	path = multiplayer-fabric-llm
 	url = https://github.com/V-Sekai-fire/elixir-turboquant-llm.git
+[submodule "multiplayer-fabric-infra"]
+	path = multiplayer-fabric-infra
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-infra.git
+[submodule "multiplayer-fabric-crdb"]
+	path = multiplayer-fabric-crdb
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-crdb.git
+[submodule "multiplayer-fabric-deploy"]
+	path = multiplayer-fabric-deploy
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-deploy.git
+[submodule "multiplayer-fabric-gateway"]
+	path = multiplayer-fabric-gateway
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-gateway.git
+[submodule "multiplayer-fabric-zone"]
+	path = multiplayer-fabric-zone
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone.git
+[submodule "multiplayer-fabric-zone-server"]
+	path = multiplayer-fabric-zone-server
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-server.git
