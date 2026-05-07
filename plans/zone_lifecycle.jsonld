@@ -1,0 +1,49 @@
+{
+  "@context": {"vsekai": "https://v-sekai.org/", "domain": "vsekai:planning/domain/"},
+  "@type": "domain:Definition",
+  "name": "zone_lifecycle",
+  "description": "Boot sequence of a multiplayer-fabric zone server: register with uro, start the WebTransport listener on UDP 7443, enter the heartbeat loop. Mirrors scripts/start.sh in the zone submodule.",
+  "variables": [
+    {"name": "registered",     "init": {"zone-af2f": false}},
+    {"name": "listening_port", "init": {"zone-af2f": 0}},
+    {"name": "heartbeats_sent","init": {"zone-af2f": 0}}
+  ],
+  "actions": {
+    "a_register_with_uro": {
+      "params": ["zone", "uro_url", "map", "address", "port"],
+      "body": [
+        {"set": "/registered/{zone}", "value": true}
+      ]
+    },
+    "a_start_webtransport_listener": {
+      "params": ["zone", "port"],
+      "body": [
+        {"set": "/listening_port/{zone}", "value": "{port}"}
+      ]
+    },
+    "a_send_heartbeat": {
+      "params": ["zone"],
+      "body": [
+        {"set": "/heartbeats_sent/{zone}", "value": 1}
+      ]
+    }
+  },
+  "methods": {
+    "boot_zone": {
+      "params": ["zone", "uro_url", "map", "address", "port"],
+      "alternatives": [
+        {
+          "name": "register_then_listen_then_beat",
+          "subtasks": [
+            ["a_register_with_uro",          "{zone}", "{uro_url}", "{map}", "{address}", "{port}"],
+            ["a_start_webtransport_listener","{zone}", "{port}"],
+            ["a_send_heartbeat",             "{zone}"]
+          ]
+        }
+      ]
+    }
+  },
+  "tasks": [
+    ["boot_zone", "zone-af2f", "https://hub.chibifire.com", "facility", "zone-af2f.fly.dev", 7443]
+  ]
+}
