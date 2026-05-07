@@ -16,14 +16,16 @@ Develop inside **WSL2** (Ubuntu). Native cmd / PowerShell isn't supported: the l
 
 ## Repository layout
 
-The full canonical list (with descriptions) is at [v-sekai-fire.github.io/manuals](https://v-sekai-fire.github.io/manuals/) and in [`multiplayer-fabric-manuals/index.md`](multiplayer-fabric-manuals/index.md). The 30 submodules are grouped into:
+The full submodule list with descriptions is at [v-sekai-fire.github.io/manuals](https://v-sekai-fire.github.io/manuals/) and in [`multiplayer-fabric-manuals/index.md`](multiplayer-fabric-manuals/index.md). The 30 submodules group into six tracks:
 
-- **Runtime services** (Fly.io): gateway, zone, zone-backend (uro), zone-console, crdb, baker, observability
-- **Engine**: godot, godot-maglev, merge, build, opentelemetry-godot(-project), webtransport, interaction-system(-project)
-- **Game systems**: taskweft, predictive-bvh(-research), aria-storage, humanoid-project, llm
-- **Infrastructure & tooling**: infra, docker-multiplayer-fabric, hosting, generate-secrets, elf-programs, casync-seed, cockroach
-- **Testing & verification**: cycle-tests
-- **Skills & docs**: manuals, skills
+| Track | Submodules |
+|---|---|
+| Runtime services on Fly.io | gateway, zone, zone-backend (uro), zone-console, crdb, baker, observability |
+| Engine | godot, godot-maglev, merge, build, opentelemetry-godot(-project), webtransport, interaction-system(-project) |
+| Game systems | taskweft, predictive-bvh(-research), aria-storage, humanoid-project, llm |
+| Infrastructure and tooling | infra, docker-multiplayer-fabric, hosting, generate-secrets, elf-programs, casync-seed, cockroach |
+| Testing | cycle-tests |
+| Docs | manuals, skills |
 
 ## Building the engine
 
@@ -59,8 +61,10 @@ Both upload `*-state.json` artifacts containing the live `flyctl status / volume
 
 ## Documentation
 
-- [Maglev cycle ADRs](https://v-sekai-fire.github.io/manuals/decisions.html) — design + pass criteria
-- [Changelog](https://v-sekai-fire.github.io/manuals/changelog.html) — daily deck logs
-- [Repository index](https://v-sekai-fire.github.io/manuals/) — every submodule with purpose
-- [`AGENTS.md`](AGENTS.md) — agent workflow rules, commit style, work queue
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — language guides, anti-tropes, doc style
+| Resource | Contents |
+|---|---|
+| [Maglev cycle ADRs](https://v-sekai-fire.github.io/manuals/decisions.html) | Design and pass criteria for each cycle |
+| [Changelog](https://v-sekai-fire.github.io/manuals/changelog.html) | Daily deck logs |
+| [Repository index](https://v-sekai-fire.github.io/manuals/) | Every submodule with its purpose |
+| [`AGENTS.md`](AGENTS.md) | Agent workflow rules, commit style, work queue |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Language guides, anti-tropes, doc style |
