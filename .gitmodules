@@ -87,3 +87,6 @@
 [submodule "multiplayer-fabric-observability"]
 	path = multiplayer-fabric-observability
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-observability
+[submodule "multiplayer-fabric-cycle-tests"]
+	path = multiplayer-fabric-cycle-tests
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests
