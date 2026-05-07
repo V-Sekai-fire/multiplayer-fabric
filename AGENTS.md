@@ -23,7 +23,8 @@ UNIX docker socket). cmd / PowerShell are not supported.
 
 ```sh
 # Clone everything
-git clone --recurse-submodules <root-url>
+git clone --recurse-submodules https://github.com/V-Sekai-fire/multiplayer-fabric
+cd multiplayer-fabric
 
 # After pulling root updates, sync submodule pointers
 git submodule update --init --recursive
