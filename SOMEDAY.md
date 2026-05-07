@@ -45,11 +45,11 @@ See: 20260425-operator-overlay.md
 ## Branch maintenance
 
 - elixir update_godot_v_sekai.exs once CI green
-- multiplayer-fabric-merge dry-run CI job
+- merge dry-run CI job
 - Archive feat/multiplayer-fabric
 
 ## Migrated from TODO (infra not on the player path)
 
-- **`GODOT_CPP_BRANCH: 4.5` mismatch in `linux_builds.yml`** — engine is 4.7.dev; mismatch causes every feat-branch CI to fail at `Compilation (godot-cpp)`. Lives at line 16 of both `multiplayer-fabric-godot/.github/workflows/linux_builds.yml` and the `multiplayer-fabric-build/godot/` mirror.
-- **Vendored `thirdparty/predictive_bvh/` snapshots out of sync** — `multiplayer-fabric-godot/thirdparty/predictive_bvh/` (632 K) and `multiplayer-fabric-build/godot/thirdparty/predictive_bvh/` (582 M) are drift-prone copies of the canonical `multiplayer-fabric-predictive-bvh` repo (research-tier modules extracted, library-root reshaped). Refresh or convert to submodules.
+- **`GODOT_CPP_BRANCH: 4.5` mismatch in `linux_builds.yml`** — engine is 4.7.dev; mismatch causes every feat-branch CI to fail at `Compilation (godot-cpp)`. Lives at line 16 of both `godot/.github/workflows/linux_builds.yml` and the `build/godot/` mirror.
+- **Vendored `thirdparty/predictive_bvh/` snapshots out of sync** — `godot/thirdparty/predictive_bvh/` (632 K) and `build/godot/thirdparty/predictive_bvh/` (582 M) are drift-prone copies of the canonical `predictive-bvh` repo (research-tier modules extracted, library-root reshaped). Refresh or convert to submodules.
 - **`headless_tests.yml` wiring detail** — Docker `zone-fabric` Godot process runs but GDScript fails to initialize (no GodotSharp → WebTransport server never starts). Folds into the *Headless test matrix* item above.

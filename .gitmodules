@@ -1,82 +1,82 @@
 [submodule "multiplayer-fabric-humanoid-project"]
-	path = multiplayer-fabric-humanoid-project
+	path = humanoid-project
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project.git
 [submodule "multiplayer-fabric-elf-programs"]
-	path = multiplayer-fabric-elf-programs
+	path = elf-programs
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-elf-programs.git
 [submodule "multiplayer-fabric-taskweft"]
-	path = multiplayer-fabric-taskweft
+	path = taskweft
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft.git
 [submodule "multiplayer-fabric-zone-console"]
-	path = multiplayer-fabric-zone-console
+	path = zone-console
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console.git
 [submodule "aria-storage"]
 	path = aria-storage
 	url = https://github.com/V-Sekai-fire/aria-storage.git
 [submodule "multiplayer-fabric-predictive-bvh"]
-	path = multiplayer-fabric-predictive-bvh
+	path = predictive-bvh
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh.git
 	branch = main
 [submodule "multiplayer-fabric-skills"]
-	path = multiplayer-fabric-skills
+	path = skills
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-skills.git
 [submodule "cockroach"]
 	path = cockroach
 	url = https://github.com/v-sekai/cockroach.git
 [submodule "multiplayer-fabric-webtransport"]
-	path = multiplayer-fabric-webtransport
+	path = webtransport
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport.git
 [submodule "multiplayer-fabric-hosting"]
-	path = multiplayer-fabric-hosting
+	path = hosting
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-hosting.git
 [submodule "multiplayer-fabric-baker"]
-	path = multiplayer-fabric-baker
+	path = baker
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-baker.git
 [submodule "multiplayer-fabric-casync-seed"]
-	path = multiplayer-fabric-casync-seed
+	path = casync-seed
 	url = https://github.com/V-Sekai/multiplayer-fabric-casync-seed.git
 [submodule "multiplayer-fabric-merge"]
-	path = multiplayer-fabric-merge
+	path = merge
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-merge
 [submodule "multiplayer-fabric-build"]
-	path = multiplayer-fabric-build
+	path = build
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-build.git
 	branch = main
 [submodule "docker-multiplayer-fabric"]
-	path = docker-multiplayer-fabric
+	path = docker
 	url = https://github.com/V-Sekai-fire/docker-multiplayer-fabric.git
 [submodule "multiplayer-fabric-generate-secrets"]
-	path = multiplayer-fabric-generate-secrets
+	path = generate-secrets
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-generate-secrets.git
 [submodule "multiplayer-fabric-predictive-bvh-research"]
-	path = multiplayer-fabric-predictive-bvh-research
+	path = predictive-bvh-research
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh-research.git
 [submodule "multiplayer-fabric-godot"]
-	path = multiplayer-fabric-godot
+	path = godot
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-godot.git
 [submodule "multiplayer-fabric-llm"]
-	path = multiplayer-fabric-llm
+	path = llm
 	url = https://github.com/V-Sekai-fire/elixir-turboquant-llm.git
 [submodule "multiplayer-fabric-manuals"]
-	path = multiplayer-fabric-manuals
+	path = manuals
 	url = https://github.com/V-Sekai-fire/manuals.git
 [submodule "multiplayer-fabric-uro"]
-	path = multiplayer-fabric-uro
+	path = uro
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend.git
 [submodule "multiplayer-fabric-gateway"]
-	path = multiplayer-fabric-gateway
+	path = gateway
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-gateway.git
 [submodule "multiplayer-fabric-zone"]
-	path = multiplayer-fabric-zone
+	path = zone
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-zone.git
 [submodule "multiplayer-fabric-infra"]
-	path = multiplayer-fabric-infra
+	path = infra
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-infra.git
 [submodule "multiplayer-fabric-interaction-system"]
-	path = multiplayer-fabric-interaction-system
+	path = interaction-system
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system.git
 [submodule "multiplayer-fabric-interaction-system-project"]
-	path = multiplayer-fabric-interaction-system-project
+	path = interaction-system-project
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system-project.git
 [submodule "opentelemetry-godot-project"]
 	path = opentelemetry-godot-project
@@ -85,8 +85,8 @@
 	path = opentelemetry-godot
 	url = https://github.com/V-Sekai-fire/opentelemetry-godot.git
 [submodule "multiplayer-fabric-observability"]
-	path = multiplayer-fabric-observability
+	path = observability
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-observability
 [submodule "multiplayer-fabric-cycle-tests"]
-	path = multiplayer-fabric-cycle-tests
+	path = cycle-tests
 	url = https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests

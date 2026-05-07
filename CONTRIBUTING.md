@@ -79,7 +79,7 @@ Update multiplayer_fabric_mmog to 20 Hz default simulation rate
 - TUI state is pure. Ratatui rendering functions take a model and return a new model; they must not perform I/O. Side effects run in `Task` calls that send messages back to the event loop.
 - Migrations are forward-only. Once merged to main, never alter a migration. Fixes require a new migration. Every migration must include a `down/0` that reverts it cleanly.
 - `multiplayer-fabric-zone-backend` uses CockroachDB via `Ecto.Adapters.Postgres`. Its Repo must set `migration_lock: false`. The `DATABASE_URL` environment variable is the canonical connection source; never hardcode hostnames or credentials. TLS cert paths come from `CRDB_CA_CERT`, `CRDB_CLIENT_CERT`, `CRDB_CLIENT_KEY`. `aria-storage` has no database — it is a pure chunk-storage library backed by the filesystem and S3.
-- NIF boundaries (`multiplayer-fabric-llm`) must schedule all blocking C calls on dirty schedulers (`ERL_NIF_DIRTY_JOB_CPU_BOUND`). Token streaming uses `enif_send` from the dirty scheduler thread — never block the regular scheduler. Resource destructors must be idempotent (null-check before freeing).
+- NIF boundaries (`llm`) must schedule all blocking C calls on dirty schedulers (`ERL_NIF_DIRTY_JOB_CPU_BOUND`). Token streaming uses `enif_send` from the dirty scheduler thread — never block the regular scheduler. Resource destructors must be idempotent (null-check before freeing).
 
 ### Go
 
@@ -104,7 +104,7 @@ Update multiplayer_fabric_mmog to 20 Hz default simulation rate
 - Use `std::array`, `std::span`, or a bump allocator in inner loops. No dynamic allocation in hot paths.
 - All SIMD optimizations must be guarded by a compile-time feature flag with a scalar reference implementation tested independently.
 - Never hand-edit `predictive_bvh.h` or `predictive_bvh.rs` — regenerate with `lake exe bvh-codegen`.
-- `multiplayer-fabric-llm` Makefile mirrors the GPU backend matrix from `turboquant-godot/modules/llm/SCsub` exactly. When turboquant-godot updates its SCsub source lists or backend conditionals, update the Makefile to match. Metal embed generation runs via `mix gen_metal_embed`, not Python.
+- `llm` Makefile mirrors the GPU backend matrix from `turboquant-godot/modules/llm/SCsub` exactly. When turboquant-godot updates its SCsub source lists or backend conditionals, update the Makefile to match. Metal embed generation runs via `mix gen_metal_embed`, not Python.
 
 ### Lean 4
 
@@ -154,7 +154,7 @@ Do not pose rhetorical questions and immediately answer them. State the point di
 
 ## Lean-proved invariants
 
-The following properties are formally verified in `multiplayer-fabric-godot/modules/multiplayer_fabric_mmog/predictive_bvh/`. They must not be violated by any change to the module.
+The following properties are formally verified in `godot/modules/multiplayer_fabric_mmog/predictive_bvh/`. They must not be violated by any change to the module.
 
 | Invariant | Location |
 |-----------|----------|
@@ -169,7 +169,7 @@ The following properties are formally verified in `multiplayer-fabric-godot/modu
 Regenerate the emitted C after any proof change:
 
 ```bash
-cd multiplayer-fabric-godot/modules/multiplayer_fabric_mmog/predictive_bvh
+cd godot/modules/multiplayer_fabric_mmog/predictive_bvh
 lake build
 lake exe bvh-codegen
 ```
