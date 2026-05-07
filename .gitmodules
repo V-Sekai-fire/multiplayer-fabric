@@ -84,3 +84,6 @@
 [submodule "opentelemetry-godot"]
 	path = opentelemetry-godot
 	url = https://github.com/V-Sekai-fire/opentelemetry-godot.git
+[submodule "multiplayer-fabric-observability"]
+	path = multiplayer-fabric-observability
+	url = https://github.com/V-Sekai-fire/multiplayer-fabric-observability
