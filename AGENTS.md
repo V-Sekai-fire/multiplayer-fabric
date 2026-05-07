@@ -197,6 +197,61 @@ A `.formatter.exs` is present. Always run `mix format` before committing and ens
 - **Method set** must be complete: every method in `domain.ex` (`go_to_bank`, `ensure_rested`, `bank_if_full`, `farm_resources`, `fight_monsters`, `rest_at_bank`, `task_cycle`) must appear in `adventurer.jsonld`.
 - **Zone enum and IDs** must match the `@zones` list order in `domain.ex` (bank=0 … task_master=13).
 
+## Maglev cycle workflow
+
+The Maglev cycles are a 13-step end-to-end validation of the multiplayer fabric stack. ADRs and pass criteria live in [`multiplayer-fabric-manuals/decisions/20260506-maglev-cycle-*.md`](https://v-sekai-fire.github.io/manuals/decisions.html). Status (as of 2026-05-07): C0 ✅ pass, C1 ✅ pass, C2 ◐ producer-side complete, infra verified; C3+ pending.
+
+### Verifying live Fly state without local auth
+
+`flyctl auth login` is not required locally — verification runs as a workflow inside CI where `FLY_API_TOKEN` is the org-level secret. Two read-only workflows on `multiplayer-fabric-infra`:
+
+```sh
+gh workflow run verify_fly_state.yml --repo V-Sekai-fire/multiplayer-fabric-infra
+gh run list --repo V-Sekai-fire/multiplayer-fabric-infra --workflow verify_fly_state.yml --limit 1
+gh run download <id> --repo V-Sekai-fire/multiplayer-fabric-infra --name fly-state -D /tmp/fly-state
+```
+
+The artifact (`fly-state.json`) holds `flyctl status / volumes list / secrets list / ips list` for the four cycle apps (gateway, crdb, zone-backend, observability).
+
+If apps come back `suspended`, wake them with `start_fly_apps.yml`; if they have 0 machines, trigger a fresh deploy from each app's own repo.
+
+For OTel verification: `verify_observability.yml` opens a `flyctl proxy` per Victoria* port and curls the queries — see [`.github/workflows/verify_observability.yml`](https://github.com/V-Sekai-fire/multiplayer-fabric-infra/blob/main/.github/workflows/verify_observability.yml).
+
+### Running cycle smoke tests
+
+Cycle test scripts live in [`multiplayer-fabric-cycle-tests`](https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests). Each is a minimal headless Godot `SceneTree` that exits 0 on PASS, non-zero on FAIL.
+
+```sh
+# Build the engine (cache-warm: ~30 s on M-series Mac)
+cd multiplayer-fabric-merge && git checkout multiplayer-fabric-base
+gscons   # alias for the canonical macOS editor build
+
+# Run cycle 1 against live infrastructure
+godot --headless --script ../multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd
+```
+
+Currently `gscons` produces `bin/godot.macos.editor.dev.double.arm64`. `gmscons` does the Windows mingw cross-compile; `gescons` does web/wasm32. All three were verified end-to-end against the assembled engine on 2026-05-07.
+
+### Engine assembly (multiplayer-fabric-merge)
+
+The engine is composed from feature branches at build time. The recipe is `multiplayer-fabric-merge/gitassembly`; the driver is `multiplayer-fabric-merge/update_godot_v_sekai.exs` which:
+
+1. Adds remotes (`v-sekai-fire/multiplayer-fabric-godot` + `opentelemetry-godot/feat/open-telemetry-base`).
+2. Runs `git-assembler --recreate` to merge each feature branch into a fresh `multiplayer-fabric-base`.
+3. Force-pushes the result to upstream.
+
+```sh
+cd multiplayer-fabric-merge
+elixir update_godot_v_sekai.exs --dry-run   # validate the recipe assembles cleanly
+elixir update_godot_v_sekai.exs             # real run; force-pushes assembled branches
+```
+
+Hard rules:
+
+- **Never use `git rerere`** in `multiplayer-fabric-merge`. Conflict resolutions there are local-only and won't reproduce on another machine. Fix the underlying overlap on the source feature branches instead (orthogonality across branches is the contract).
+- **Each feature branch owns its files outright.** No two branches in the recipe should add the same file with different content. Today's split of `feat/engine-patches` into 10 single-topic branches enforces this.
+- The build repo (`multiplayer-fabric-build/godot/`) tracks `multiplayer-fabric-godot-maglev/multiplayer-fabric-base` via `git subrepo`. The maglev fork is a publish target for the assembled engine; never push feature branches there.
+
 ## Per-submodule test commands
 
 | Submodule | Test command | Framework |
