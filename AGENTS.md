@@ -46,7 +46,7 @@ Never commit changes directly to files inside a submodule from the root repo. Al
 
 ## Universal rules
 
-### Red-green-refactor
+### Stub-green-refactor
 
 Every feature and every fix is driven by a failing test committed before any implementation code. Validate that the failure message proves the assertion is load-bearing — mutation-test it by briefly breaking the implementation if the message is ambiguous. Commit when green; clean up with tests still green. One commit per cycle. The TDD arc must be legible in `git log`.
 
@@ -124,13 +124,6 @@ Do not pose rhetorical questions and immediately answer them. State the point di
 - Migrations are forward-only. Once merged to main, never alter a migration. Fixes require a new migration. Every migration must include a `down/0` that reverts it cleanly.
 - `zone-backend` (uro) uses CockroachDB via `Ecto.Adapters.Postgres`. Its Repo must set `migration_lock: false`. The `DATABASE_URL` environment variable is the canonical connection source; never hardcode hostnames or credentials. TLS cert paths come from `CRDB_CA_CERT`, `CRDB_CLIENT_CERT`, `CRDB_CLIENT_KEY`. `aria-storage` has no database — it is a pure chunk-storage library backed by the filesystem and S3.
 - NIF boundaries (`llm`) must schedule all blocking C calls on dirty schedulers (`ERL_NIF_DIRTY_JOB_CPU_BOUND`). Token streaming uses `enif_send` from the dirty scheduler thread — never block the regular scheduler. Resource destructors must be idempotent (null-check before freeing).
-
-### Go
-
-- New store backends implement a minimal interface. Do not add methods to an interface unless every existing implementation needs them.
-- Options are passed explicitly. `init()` blocks that modify global state are not permitted outside `cmd/`.
-- Every function performing I/O accepts `context.Context` as its first argument.
-- `gofmt -l .` must produce no output before committing.
 
 ### Godot / GDScript
 
@@ -261,18 +254,13 @@ Hard rules:
 
 ## Per-submodule test commands
 
-| Submodule | Test command | Framework |
-|-----------|-------------|-----------|
-| `aria-storage` | `mix test` | ExUnit + PropCheck |
-| `llm` | `mix test` | ExUnit (elixir_make builds NIF automatically) |
-| `taskweft` | `mix test --include property` | ExUnit + PropCheck |
-| `zone-backend` (uro) | `mix test` | ExUnit |
-| `zone-console` | `mix test` | ExUnit + PropCheck |
-
-## Critical cross-submodule relationships
-
-`taskweft` is a library dependency of the artifact CLI and the zone console. A breaking API change in taskweft requires updates in both consumers before either is released.
-
+| Submodule            | Test command                  | Framework                                     |
+| -------------------- | ----------------------------- | --------------------------------------------- |
+| `aria-storage`       | `mix test`                    | ExUnit + PropCheck                            |
+| `llm`                | `mix test`                    | ExUnit (elixir_make builds NIF automatically) |
+| `taskweft`           | `mix test --include property` | ExUnit + PropCheck                            |
+| `zone-backend` (uro) | `mix test`                    | ExUnit                                        |
+| `zone-console`       | `mix test`                    | ExUnit + PropCheck                            |
 ## Verbalized Sampling (VS)
 
 When facing an open-ended decision — which branch to create, how to resolve a conflict, what name to give a new submodule — use Verbalized Sampling (Zhang et al. 2025, `references.bib`) instead of committing to the first option that comes to mind.
@@ -306,42 +294,6 @@ When to use VS:
 - Choosing between two architectural approaches
 
 Reference: `references.bib` → `zhang2025verbalized`.
-
-## Work queue discipline
-
-Primary definition: `taskweft/priv/plans/domains/work_queue.jsonld`. Schedule proof: `lean4-predictive-bvh-proofs/WorkQueue.lean` (`workQueue_scheduleValid`).
-
-One Saturday per week, single entity (ifire). Each item advances stub → green → refactor. Green phase includes writing the Lean proof for that item. Demo: 2026-08-29.
-
-```
- 1. openxr_simulator     May 02 → May 16   XR   critical path
- 2. vr_interaction       May 23 → Jun 06   XR   critical path
- 3. pcvr_player          Jun 13 → Jun 27   MMOG critical path
- 4. zone_manifest        Jul 04 → Jul 18   MMOG demo gate
- 5. sandbox_rebac        Jul 25 → Aug 08   MMOG demo gate
- 6. jellyfish_demo       Aug 15 → Aug 29   MMOG ← demo
- 7. isolated_submodule   Sep 05 → Sep 19   MMOG CI
- 8. headless_observer    Sep 26 → Oct 10   MMOG CI
- 9. headless_matrix      Oct 17 → Oct 31   MMOG CI
-10. turboquant_llm       Nov 07 → Nov 21   RPG
-11. artifactsmmog_bot    Nov 28 → Dec 12   RPG
-12. gepa_cycle           Dec 19 → Jan 02   RPG
-13. concert_archetype    Jan 09 → Jan 23   MMOG archetype
-14. ragdoll_archetype    Jan 30 → Feb 13   MMOG archetype
-15. convoy_chokepoint    Feb 20 → Mar 06   MMOG archetype
-16. otel_tracing         Mar 13 → Mar 27   XR   independent
-```
-
-To regenerate the plan:
-
-```sh
-cd taskweft && mix run -e '
-domain = File.read!("priv/plans/domains/work_queue.jsonld")
-{:ok, plan} = Taskweft.plan(domain)
-Jason.decode!(plan) |> Enum.each(&IO.inspect/1)
-'
-```
-
 ## Distribution
 
 ### casync / desync asset distribution (aria-storage)
@@ -352,81 +304,6 @@ Game assets are distributed as casync chunk stores. The canonical chunk store fo
 - The local chunk cache lives at `~/.cache/casync/chunks` (XDG on Linux, `~/Library/Caches/casync/chunks` on macOS, `%LOCALAPPDATA%\casync\chunks` on Windows) and is shared between `aria-storage`, `desync`, and `casync`. Do not change this path without updating all three.
 - `mix aria_storage.fetch --index <url> --store <url>` reassembles an asset. Add `--cache <path>` to override the default cache location.
 - Chunk store layout: `{store}/{hex[0:4]}/{hex}.cacnk`. Flat layouts are not interoperable.
-
-### Homebrew (macOS)
-
-Formulae live in `homebrew-multiplayer-fabric/Formula/`. For each version bump:
-
-1. Download the release archive and compute `shasum -a 256 <tarball>`.
-2. Update `url` and `sha256` in the formula. Remove any `revision` line unless a formula-level patch was reapplied.
-3. Run `brew audit --strict Formula/<name>.rb` and `brew install --build-from-source Formula/<name>.rb`.
-4. Commit as `Bump <name> to <version>`.
-
-Do not add or modify `bottle do` blocks manually — bottles are generated by CI.
-
-### Scoop (Windows)
-
-Manifests live in `scoop-multiplayer-fabric/bucket/`. For each version bump:
-
-1. Download the Windows archive and compute `(Get-FileHash <file> -Algorithm SHA256).Hash.ToLower()`.
-2. Update `version`, `url`, and `hash` in the manifest.
-3. Run `scoop install bucket/<name>.json` to confirm install and uninstall cleanly.
-4. Commit as `Bump <name> to <version>`.
-
-Every manifest must include `checkver` and `autoupdate` pointed at the GitHub releases API.
-
-## Not building
-
-These were explicitly superseded or rejected. Do not reopen without an ADR.
-
-| Feature | Reason |
-|---------|--------|
-| Three.js WebGPU zone client | Superseded by Godot native client |
-| Three.js observer (Stage 1) | Superseded by Godot headless observer |
-| Three.js player (Stage 2) | Superseded by Godot PCVR player |
-| Dual-client Playwright test | Superseded by headless test matrix (GO+GP) |
-| Godot wasm32/wasm64 web export | Dropped |
-| SQL-based feature flagging | Rejected |
-| Nutanix/Harvester HCI evaluation | Deferred |
-
-## multiplayer-fabric-artifacts-mmog
-
-An Elixir HTN-planning bot for the ArtifactsMMO game. It calls the game API via `Req`, builds a Taskweft domain JSON from live character state, plans one episode, and executes the resulting action sequence.
-
-### Running the bot
-
-```sh
-cd multiplayer-fabric-artifacts-mmog
-
-# List available goals
-mix artifacts_mmog.goals
-
-# Run a goal loop (Ctrl-C to stop)
-ARTIFACTS_MMOG_KEY=<token> mix artifacts_mmog.run <CharName> <goal>
-
-# Run a fixed number of iterations
-ARTIFACTS_MMOG_KEY=<token> mix artifacts_mmog.run <CharName> fight_chickens 10
-```
-
-### Available goals
-
-| Goal | Action |
-|---|---|
-| `farm_copper` / `farm_iron` / `farm_coal` | Gather from ore nodes |
-| `farm_ash` / `farm_birch` / `farm_spruce` / `farm_sunflowers` | Gather from resource nodes |
-| `fight_chickens` / `fight_pigs` / `fight_goblins` / `fight_wolverines` | Fight monsters |
-| `fish_gudgeon` | Fish at gudgeon spot |
-| `task_cycle` | Accept or complete the active task |
-| `rest_at_bank` | Go to bank and rest to full HP |
-
 ### Formatting
 
 A `.formatter.exs` is present. Always run `mix format` before committing and ensure `mix format --check-formatted` passes (the CI gate checks this).
-
-### adventurer.jsonld — baseline persona plan
-
-`priv/plans/personas/adventurer.jsonld` is a standalone JSON-LD domain that mirrors the actions and methods produced by `ArtifactsMmog.Domain.build/2`. When `domain.ex` changes, this file must be kept in sync:
-
-- Action op syntax must match: `domain.ex` emits `"op": "add"` / `"op": "get"` — not the old `"type": "math/add"` / `"type": "pointer/get"`.
-- Method set must be complete: every method in `domain.ex` (`go_to_bank`, `ensure_rested`, `bank_if_full`, `farm_resources`, `fight_monsters`, `rest_at_bank`, `task_cycle`) must appear in `adventurer.jsonld`.
-- Zone enum and IDs must match the `@zones` list order in `domain.ex` (bank=0 … task_master=13).
